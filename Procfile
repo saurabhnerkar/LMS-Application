@@ -1,1 +1,1 @@
-web: gunicorn Lms_project.wsgi
+web: gunicorn lms_core.wsgi
