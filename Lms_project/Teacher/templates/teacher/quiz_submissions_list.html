@@ -1,0 +1,29 @@
+<!-- Go Back Button -->
+  <a href="javascript:history.back()" class="btn btn-outline-danger go-back-btn" style ="margin-left: 8.5em;">
+    <i class="fas fa-arrow-left"></i> Go Back
+  </a>
+
+
+<h3>Quiz Submissions - {{ quiz.title }}</h3>
+
+<h5>✅ Submitted Students</h5>
+<ul class="list-group mb-4">
+  {% for sub in submitted %}
+    <li class="list-group-item">
+      {{ sub.enrollment.student.user.email }} — Score: {{ sub.score }}
+    </li>
+  {% empty %}
+    <li class="list-group-item text-muted">No submissions yet.</li>
+  {% endfor %}
+</ul>
+
+<h5>❌ Not Submitted</h5>
+<ul class="list-group">
+  {% for en in not_submitted %}
+    <li class="list-group-item">
+      {{ en.student.user.email }}
+    </li>
+  {% empty %}
+    <li class="list-group-item text-muted">All students have submitted.</li>
+  {% endfor %}
+</ul>

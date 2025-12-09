@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>My Enrollments</h2>
+  <ul class="list-group">
+    {% for enrollment in enrollments %}
+    <li class="list-group-item">
+      <a href="{% url 'student:enrollment_detail' enrollment.pk %}">{{ enrollment.course.name }}</a>
+    </li>
+    {% empty %}
+    <li class="list-group-item text-muted">No enrollments yet.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

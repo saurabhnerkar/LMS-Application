@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<!-- Go Back Button -->
+  <a href="javascript:history.back()" class="btn btn-outline-danger go-back-btn" style ="margin-left: 4em;">
+    <i class="fas fa-arrow-left"></i> Go Back
+  </a>
+<div class="container py-4">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+            <div class="card shadow-lg border-0 rounded-4">
+                
+                <!-- Header -->
+                <div class="card-header bg-primary text-white text-center py-3 rounded-top">
+                    <h3 class="mb-0">Edit Teacher Profile</h3>
+                </div>
+
+                <div class="card-body p-4">
+                    
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <!-- ACCOUNT INFORMATION -->
+                        <h5 class="fw-bold text-primary mb-3">Account Information</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                {{ form.first_name }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name</label>
+                                {{ form.last_name }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Username</label>
+                                {{ form.username }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                {{ form.email }}
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- BASIC TEACHER INFO -->
+                        <h5 class="fw-bold text-primary mb-3">Basic Information</h5>
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+                                <label class="form-label">Full Name</label>
+                                {{ form.full_name }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Mobile Number</label>
+                                {{ form.mobile_number }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Gender</label>
+                                {{ form.gender }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Date of Birth</label>
+                                {{ form.date_of_birth }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Country</label>
+                                {{ form.country }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">State</label>
+                                {{ form.state }}
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label">Address</label>
+                                {{ form.address }}
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label">Bio</label>
+                                {{ form.bio }}
+                            </div>
+
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- EDUCATION -->
+                        <h5 class="fw-bold text-primary mb-3">Education</h5>
+                        <div class="row g-3">
+                            
+                            <div class="col-md-6">
+                                <label class="form-label">Qualification Type</label>
+                                {{ form.qualification_type }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Institution Name</label>
+                                {{ form.institution_name }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Passing Year</label>
+                                {{ form.passing_year }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Currently Studying</label>
+                                {{ form.currently_studying }}
+                            </div>
+
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- EXPERIENCE -->
+                        <h5 class="fw-bold text-primary mb-3">Experience</h5>
+                        <div class="row g-3">
+
+                            <div class="col-md-6">
+                                <label class="form-label">Previous Workplace</label>
+                                {{ form.prev_workplace }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Designation</label>
+                                {{ form.designation }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Start Date</label>
+                                {{ form.start_date }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">End Date</label>
+                                {{ form.end_date }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Current Joining Date</label>
+                                {{ form.current_joining_date }}
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Total Experience (Years)</label>
+                                {{ form.experience }}
+                            </div>
+
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- SOCIAL LINKS -->
+                        <h5 class="fw-bold text-primary mb-3">Social Links</h5>
+                        <div class="row g-3">
+
+                            <div class="col-md-4">
+                                <label class="form-label">Portfolio Link</label>
+                                {{ form.portfolio_link }}
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">GitHub Link</label>
+                                {{ form.github_link }}
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">LinkedIn Link</label>
+                                {{ form.linkedin_link }}
+                            </div>
+
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary py-2 fw-bold" style="border-radius: 10px;">
+                                Save Profile
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- STYLE TWEAKS -->
+<style>
+    input, select, textarea {
+        border-radius: 8px !important;
+    }
+</style>
+
+{% endblock %}

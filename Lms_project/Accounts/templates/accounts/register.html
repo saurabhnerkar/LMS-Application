@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Register
+{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: #f2f4f7 !important;  /* light grey page background */
+    }
+
+    .card {
+        border-radius: 12px;
+        background: #ffffff;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08); /* soft shadow */
+        border: none;
+    }
+
+    .card-header {
+        background: #fafafa !important;
+        border-bottom: 1px solid #e6e6e6;
+    }
+
+    .sticker {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        padding: 10px;
+    }
+
+    .sticker img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .card-header h3 {
+        font-weight: 700;    /* Bold Heading */
+        font-size: 28px;
+    }
+    .btn-student {
+    background: #00b4ff;
+    color: white;
+}
+
+.btn-teacher {
+    background: #ffb400;
+    color: black;
+}
+
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h3>REGISTER</h3>
+                </div>
+
+                <div class="card-body text-center">
+                    <p>Are you a student or a teacher?</p>
+
+                    <div class="row">
+                        
+                        <!-- Student Section -->
+                        <div class="col-6">
+                            <div class="sticker">
+                                <img src="https://cdn-icons-png.flaticon.com/512/2940/2940438.png" alt="Student Icon">
+                            </div>
+                            <a href="{% url 'accounts:register_student' %}" 
+                               class="btn btn-info btn-block">I'm a Student</a>
+                        </div>
+
+                        <!-- Teacher Section -->
+                        <div class="col-6">
+                            <div class="sticker">
+                                <img src="https://cdn-icons-png.flaticon.com/512/16468/16468657.png" alt="Teacher Icon">
+                            </div>
+                            <a href="{% url 'accounts:register_teacher' %}" 
+                               class="btn btn-warning btn-block">I'm a Teacher</a>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

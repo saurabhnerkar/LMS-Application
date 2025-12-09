@@ -1,0 +1,300 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  /* ===== Global Fix ===== */
+#main-content {
+    margin-left: 250px;
+    padding: 20px;
+    transition: 0.3s;
+}
+
+@media (max-width: 992px) {
+    #main-content {
+        margin-left: 0 !important;
+        padding: 15px;
+    }
+}
+
+/* ===== Sidebar Fix for Mobile ===== */
+.sidebar {
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 9999; /* Always stays behind header toggle button */
+}
+
+.sidebar-toggle-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 10000 !important; /* ABOVE header and sidebar */
+}
+
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+}
+
+/* ===== Go Back Button Responsive ===== */
+.go-back-btn {
+    margin-left: 8.5em;
+}
+
+@media (max-width: 576px) {
+    .go-back-btn {
+        margin-left: 1.5em !important;
+        margin-bottom: 10px;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* ===== Quiz Details Card ===== */
+@media (max-width: 768px) {
+    .card .row .col-md-8,
+    .card .row .col-md-4 {
+        width: 100% !important;
+        border: none !important;
+        margin-bottom: 10px;
+    }
+}
+
+/* ===== Statistics Cards Responsive ===== */
+@media (max-width: 768px) {
+    .row .col-md-4 {
+        margin-bottom: 15px;
+    }
+}
+
+/* ===== Tabs Responsive ===== */
+.nav-tabs .nav-link {
+    white-space: nowrap;
+}
+
+@media (max-width: 576px) {
+    .nav-tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+    .nav-tabs .nav-item {
+        flex: 0 0 auto;
+    }
+}
+
+/* ===== Table Responsive Fix ===== */
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* Student image resize */
+table img {
+    width: 28px;
+    height: 28px;
+}
+
+/* ===== Reduce padding for mobile ===== */
+@media (max-width: 576px) {
+    .card-body {
+        padding: 12px !important;
+    }
+}
+footer{
+  display: none;
+}
+
+</style>
+{% include 'teacher/_sidebar.html' %}
+
+  
+<div class="div1" style="margin-left:200px; padding:35px; background:#f4f8fb; min-height:100vh;">
+  <!-- Go Back Button -->
+  <a href="javascript:history.back()" class="btn btn-outline-danger go-back-btn" >
+    <i class="fas fa-arrow-left"></i> Go Back
+  </a>
+<div class="container mt-5">
+
+  <!-- Quiz Details Card -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">{{ quiz.title }}</h4>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-8">
+          <p class="text-muted mb-3">{{ quiz.description }}</p>
+        </div>
+        <div class="col-md-4 border-start">
+          <div class="d-flex align-items-center mb-3">
+            <i class="fa-solid fa-calendar-check text-success me-2"></i>
+            <span><strong>Start Time:</strong> {{ quiz.start_time|date:"M d, Y, h:i A" }}</span>
+          </div>
+          <div class="d-flex align-items-center mb-3">
+            <i class="fa-solid fa-calendar-xmark text-danger me-2"></i>
+            <span><strong>End Time:</strong> {{ quiz.end_time|date:"M d, Y, h:i A" }}</span>
+          </div>
+          <div class="d-flex align-items-center mb-3">
+            <i class="fa-solid fa-star text-warning me-2"></i>
+            <span><strong>Total Marks:</strong> {{ quiz.total_marks }}</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <i class="fa-solid fa-users text-primary me-2"></i>
+            <span><strong>Total Students:</strong> {{ total_students }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Attempt Statistics -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card bg-success text-white shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fa-solid fa-check-circle me-2"></i>Attempted
+          </h5>
+          <h3 class="mb-0">{{ attempted_students.count }}</h3>
+          <small>{{ attempted_percentage|floatformat:1 }}% of total students</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-warning text-dark shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fa-solid fa-clock me-2"></i>Not Attempted
+          </h5>
+          <h3 class="mb-0">{{ not_attempted_students|length }}</h3>
+          <small>{{ pending_percentage|floatformat:1 }}% of total students</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-info text-white shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fa-solid fa-users me-2"></i>Total Students
+          </h5>
+          <h3 class="mb-0">{{ total_students }}</h3>
+          <small>Enrolled in this course</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs for Attempted / Not Attempted Students -->
+  <ul class="nav nav-tabs mb-4" id="attemptTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="attempted-tab" data-bs-toggle="tab" data-bs-target="#attempted" type="button">
+        Attempted ({{ attempted_students.count }})
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="not-attempted-tab" data-bs-toggle="tab" data-bs-target="#not-attempted" type="button">
+        Not Attempted ({{ not_attempted_students|length }})
+      </button>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="attemptTabsContent">
+    <!-- Attempted Students -->
+    <div class="tab-pane fade show active" id="attempted" role="tabpanel">
+      {% if attempted_students %}
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>Student Name</th>
+                <th>Attempt Date</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in attempted_info %}
+                {% with student=item.student attempt=item.attempt %}
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      {% if student.profile_picture %}
+                        <img src="{{ student.profile_picture.url }}" class="rounded-circle me-2" width="32" height="32">
+                      {% else %}
+                        <i class="fa-solid fa-user-circle me-2 text-secondary" style="font-size: 32px;"></i>
+                      {% endif %}
+                      {{ item.student.user.first_name }} {{ item.student.user.last_name }}
+                    </div>
+                  </td>
+                  <td>
+                    {% if attempt %}
+                      {{ attempt.submitted_on|date:"M d, Y H:i" }}
+                    {% else %}
+                      -
+                    {% endif %}
+                  </td>
+                  <td>{{ attempt.score }}/{{ quiz.total_marks }}</td>
+                </tr>
+                {% endwith %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="alert alert-info">
+          <i class="fa-solid fa-info-circle me-2"></i>No quiz attempts yet.
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Not Attempted Students -->
+    <div class="tab-pane fade" id="not-attempted" role="tabpanel">
+      {% if not_attempted_students %}
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>Student Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for student in not_attempted_students %}
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      {% if student.profile_picture %}
+                        <img src="{{ student.profile_picture.url }}" class="rounded-circle me-2" width="32" height="32">
+                      {% else %}
+                        <i class="fa-solid fa-user-circle me-2 text-secondary" style="font-size: 32px;"></i>
+                      {% endif %}
+                      {{ item.student.user.first_name }} {{ item.student.user.last_name }}
+                    </div>
+                  </td>
+                  <td>{{ item.student.user.email }}</td>
+                  <td><span class="badge bg-warning text-dark">Pending</span></td>
+                  <td>
+                    <button class="btn btn-outline-warning btn-sm">Send Reminder</button>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="alert alert-success">
+          <i class="fa-solid fa-check-circle me-2"></i>All students have attempted this quiz!
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block content %}
+<style>
+/* ===========================
+   Bootstrap-aligned responsiveness
+   (minimal custom CSS; layout/responsiveness uses Bootstrap breakpoints)
+   =========================== */
+
+/* Desktop default: overview grid as two columns */
+.overview-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+/* Large and below (≤ 991.98px): keep two columns but allow Bootstrap to adjust spacing */
+@media (max-width: 991.98px) {
+    .overview-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 16px;
+    }
+}
+
+/* Medium devices / tablets (≤ 767.98px): two columns -> stack where needed */
+@media (max-width: 767.98px) {
+    .overview-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 14px;
+    }
+
+    /* Make the main container span full width on small screens */
+    .div1 {
+        margin-left: 0 !important;
+        padding: 15px !important;
+        width: 100% !important;
+    }
+
+    /* Tables: allow horizontal scrolling using block + overflow (Bootstrap also has .table-responsive, but markup unchanged) */
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Extra small devices / phones (≤ 575.98px): stack overview cards into single column */
+@media (max-width: 575.98px) {
+    .overview-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+    }
+
+    .div1 {
+        margin-left: 0 !important;
+        padding: 12px !important;
+        width: 100% !important;
+    }
+
+    /* Make the mobile sidebar toggle visible via CSS fallback (JS already handles creation/visibility) */
+    #mobileSidebarToggle {
+        display: block !important;
+    }
+}
+
+/* Keep footer hidden as before */
+footer {
+    display: none;
+}
+
+/* Waving hand animation (preserved exactly) */
+@keyframes wave-animation {
+    0% { transform: rotate(0deg); }
+    10% { transform: rotate(14deg); }
+    20% { transform: rotate(-8deg); }
+    30% { transform: rotate(14deg); }
+    40% { transform: rotate(-4deg); }
+    50% { transform: rotate(10deg); }
+    60% { transform: rotate(0deg); }
+    100% { transform: rotate(0deg); }
+}
+
+.wave {
+    animation: wave-animation 1.7s ease-in-out;
+    transform-origin: 70% 70%;
+    display: inline-block;
+}
+</style>
+
+{% include 'teacher/_sidebar.html' %}
+
+<div class="div1" style="margin-left:200px; padding:35px; background:#f4f8fb; min-height:100vh;">
+
+    <!-- ========================= -->
+    <!--       WELCOME CARD        -->
+    <!-- ========================= -->
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12 col-md-11 col-sm-12">
+
+                <div style="
+                    background:white;
+                    padding:22px 28px;
+                    border-radius:15px;
+                    border:1px solid #eaeaea;
+                    box-shadow:0 2px 10px rgba(0,0,0,0.05);
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                    margin-bottom:25px;
+                ">
+                    <!-- Left -->
+                    <h4 style="font-weight:700; margin:0; font-size:22px;">
+                        <span id="waveHand" style="display:inline-block; font-size:26px;">👋</span>
+Welcome, {{ request.user.first_name }} {{ request.user.last_name }}
+
+                    </h4>
+
+                    <!-- Right -->
+                    <div style="text-align:right; line-height:1.2;">
+                        <span style="font-size:14px; color:#666;">Institute Name</span><br>
+                        <span style="font-weight:800; font-size:20px;">ITPRENEUR</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================= -->
+    <!--     OVERVIEW CARDS        -->
+    <!-- ========================= -->
+    <div style="background:white; border-radius:15px; padding:25px;
+                border:1px solid #eaeaea; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+
+        <h3 style="font-weight:700; margin-bottom:20px; text-align:center;">Overview</h3>
+
+        <div class="overview-grid"
+             style="display:grid; grid-template-columns:repeat(2,1fr); gap:18px;">
+
+            <!-- Total Learners -->
+            <div style="background:#f9fafb; padding:18px; border-radius:12px; border:1px solid #eee;">
+                <h4>Total Learners</h4>
+                <p style="font-size:32px; font-weight:700; margin:5px 0;">{{ total_learners }}</p>
+                <span style="color:#198754; font-weight:600;">Live</span>
+            </div>
+
+            <!-- Total Courses -->
+            <div style="background:#f9fafb; padding:18px; border-radius:12px; border:1px solid #eee;">
+                <h4>Total Courses</h4>
+                <p style="font-size:32px; font-weight:700; margin:5px 0;">{{ course_count }}</p>
+                <span style="color:#dc3545; font-weight:600;">Ongoing</span>
+            </div>
+
+        </div>
+    </div>
+
+    <br><br>
+
+    <!-- FEEDBACK -->
+<div style="background:white; padding:25px; border-radius:12px; border:1px solid #eee;">
+    <h3 style="text-align:center; font-weight:700;">Training Feedback</h3>
+    <p style="text-align:center;">View feedback submitted by your students.</p>
+
+    <div style="text-align:center;">
+        <a href="{% url 'teacher:teacher_feedback_list' %}"
+           style="background:#198754; padding:10px 16px; border-radius:8px; color:white;
+                  text-decoration:none; font-weight:600; display:inline-block; margin-top:10px;">
+            View Feedback
+        </a>
+    </div>
+</div>
+
+
+    <br><br>
+
+    <!-- ASSIGNED COURSES -->
+<div style="background:white; padding:25px; border-radius:12px; border:1px solid #eee;">
+    <h3 style="text-align:center; font-weight:700;">
+        Assigned Courses & Enrollments
+    </h3>
+    <p style="text-align:center; margin-top:8px;">
+        Overview of students enrolled in your assigned courses.
+    </p>
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>Course</th>
+                <th>Total Students</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in course_data %}
+                <tr>
+                    <td>{{ c.course_name }}</td>
+                    <td>{{ c.student_count }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="2" class="text-center text-muted">No courses assigned</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<!-- JS for dropdowns + sidebar toggle -->
+<script>
+document.getElementById("notif-bell").onclick = function (e) {
+    e.stopPropagation();
+    let drop = document.getElementById("notifications-dropdown");
+    drop.style.display = drop.style.display === "block" ? "none" : "block";
+};
+document.addEventListener("click", () => {
+    document.getElementById("notifications-dropdown").style.display = "none";
+});
+
+function toggleProfile() {
+    let drop = document.getElementById("profile-dropdown");
+    drop.style.display = drop.style.display === "block" ? "none" : "block";
+}
+document.getElementById("profile-logo").onclick = toggleProfile;
+document.getElementById("profile-trigger").onclick = toggleProfile;
+
+/* Mobile Sidebar Toggle */
+document.addEventListener("DOMContentLoaded", function () {
+    const btn = document.createElement("button");
+    btn.id = "mobileSidebarToggle";
+    btn.innerHTML = "☰";
+    btn.style.position = "fixed";
+    btn.style.top = "12px";
+    btn.style.left = "12px";
+    btn.style.zIndex = "9999";
+    btn.style.padding = "10px 14px";
+    btn.style.border = "1px solid #ccc";
+    btn.style.borderRadius = "8px";
+    btn.style.background = "white";
+    btn.style.fontSize = "20px";
+    btn.style.display = "none";
+
+    document.body.appendChild(btn);
+
+    const sidebar = document.getElementById("sidebar");
+
+    if (window.innerWidth <= 768) {
+        btn.style.display = "block";
+    }
+
+    btn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        sidebar.classList.add("mobile-active");
+        btn.style.display = "none";
+    });
+
+    document.addEventListener("click", function (e) {
+        if (sidebar.classList.contains("mobile-active") && !sidebar.contains(e.target)) {
+            sidebar.classList.remove("mobile-active");
+            btn.style.display = "block";
+        }
+    });
+});
+// Waving hand animation on page load
+document.addEventListener("DOMContentLoaded", function () {
+    const hand = document.getElementById("waveHand");
+
+    if (hand) {
+        hand.classList.add("wave");
+
+        // Remove class after animation so it can play again if needed
+        setTimeout(() => {
+            hand.classList.remove("wave");
+        }, 1800);
+    }
+});
+
+// Re-trigger waving animation every 3 seconds
+document.addEventListener("DOMContentLoaded", function () {
+    const hand = document.getElementById("waveHand");
+
+    function wave() {
+        hand.classList.add("wave");
+        setTimeout(() => {
+            hand.classList.remove("wave");
+        }, 1700); // matches animation duration
+    }
+
+    // First wave on page load
+    wave();
+
+    // Repeat every 3 seconds
+    setInterval(wave, 3000);
+});
+
+</script>
+
+{% endblock %}

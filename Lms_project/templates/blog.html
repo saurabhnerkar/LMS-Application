@@ -1,0 +1,326 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+ {% block content %}
+  {% block extra_css %}
+  <style>
+    :root{
+      --muted:#6b6f76;
+      --card-radius:10px;
+      --card-shadow: 0 6px 18px rgba(23,40,66,0.06);
+      --accent: #1f9a4a;
+    }
+
+    body{
+      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: #f6f7f8;
+      color: #222;
+    }
+
+    /* Header hero */
+    .hero {
+      background: #f3f5f6;
+      padding: 40px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.03);
+    }
+    .hero .breadcrumb {font-size: .9rem; color: var(--muted)}
+    .hero h1 {font-weight:600; margin-bottom:6px}
+    .hero p.lead {color:var(--muted); margin-bottom:0}
+
+    /* Grid: responsive; 5 columns on xl, 4 on lg, 3 on md, 2 on sm, 1 on xs */
+    .cards-grid {
+      display: grid;
+      grid-gap: 24px;
+      padding: 40px 20px;
+      align-items: start;
+      /* default to 1 column */
+      grid-template-columns: repeat(1, 1fr);
+    }
+    @media (min-width: 576px) { .cards-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 768px) { .cards-grid { grid-template-columns: repeat(3, 1fr); } }
+    /* @media (min-width: 992px) { .cards-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (min-width: 1200px){ .cards-grid { grid-template-columns: repeat(5, 1fr); } } */
+    @media (min-width: 992px){
+  .cards-grid { grid-template-columns: repeat(3, 1fr) !important; }
+}
+@media (min-width: 1200px){
+  .cards-grid { grid-template-columns: repeat(3, 1fr) !important; }
+}
+    .blog-card {
+      background: white;
+      border-radius: var(--card-radius);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+      display:flex;
+      flex-direction:column;
+      transition: transform .18s ease, box-shadow .18s ease;
+      min-height: 360px;
+    }
+    .blog-card:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(23,40,66,0.09); }
+
+    .blog-card .img-wrap {
+      width:100%;
+      height:170px;
+      overflow:hidden;
+      display:block;
+      background: #eee;
+    }
+    .blog-card .img-wrap img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .card-body {
+      padding: 14px 16px;
+      flex:1;
+      display:flex;
+      flex-direction:column;
+    }
+    .card-title {
+      font-size: 0.96rem;
+      font-weight:600;
+      margin-bottom: 8px;
+      line-height:1.2;
+      color: #212529;
+    }
+    .card-excerpt {
+      font-size: .85rem;
+      color: var(--muted);
+      line-height: 1.35;
+      flex:1;
+      margin-bottom:10px;
+      max-height:5.4em;
+      overflow:hidden;
+    }
+    .card-meta {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(0,0,0,0.04);
+      margin-top: auto;
+    }
+    .author { font-size:.83rem; color:var(--muted) }
+    .view-btn { font-size:.83rem; color:var(--accent); cursor:pointer; text-decoration: none; }
+
+    /* load more button center */
+    .load-more-wrap { display:flex; justify-content:center; padding:26px 0 80px; }
+
+    /* footer */
+    footer { background:#fff; padding:18px 0; border-top:1px solid rgba(0,0,0,0.04); }
+    .navbar-brand img { height:32px; }
+
+    /* small details */
+    .badge-light-green {
+      background: rgba(31,154,74,0.08);
+      color: var(--accent);
+      border-radius: 999px;
+      padding:6px 10px;
+      font-weight:600;
+      font-size:.78rem;
+    }
+  </style>
+  {% endblock %}
+
+</head>
+<body>
+
+  <!-- NAVBAR (simple version) -->
+  <!-- <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="https://raw.githubusercontent.com/itpreneur-placeholder/logo/main/itpreneur.png" alt="logo" style="height:30px; margin-right:8px;">
+        ITPRENEUR
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navmenu">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Courses</a></li>
+          <li class="nav-item"><a class="nav-link active" href="#">Blogs</a></li>
+          <li class="nav-item d-none d-md-block"><a class="nav-link" href="#">Hi, Vaishnavi</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav> -->
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto text-center">
+          <h1>Explore Our Blogs</h1>
+          <p class="lead">Explore collection of insightful blogs, covering expert tips, learning strategies, and industry trends.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CARDS GRID -->
+  <main class="container">
+    <div id="cards" class="cards-grid">
+      <!-- Card template repeated 5 times using local images -->
+      <article class="blog-card" data-author="Vinayak Patil" data-title="Navigating Current IT Recruitment Trends: Insights" data-full="Full article content for card 1...">
+        
+      <div class="img-wrap"><img src="https://nrichvideos.objectstore.e2enetworks.net/7c6Wundefined" alt="card 1"></div>
+      
+
+        <div class="card-body">
+          <div class="card-title">Navigating Current IT Recruitment Trends: Insights for Aspiring Professionals</div>
+          <div class="card-excerpt"><strong>Author: Pranit Kasvekar.</strong> Experienced Director with MBA in international business... Published JAN 2025</div>
+          <div class="card-meta">
+            <div class="author">Rating<br><strong>⭐⭐⭐⭐⭐</strong></div>
+            <a class="view-btn" href="{% static 'blog_page_1.html' %}" target="_blank">
+               Know More →
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <article class="blog-card" data-author="Vinayak Patil" data-title="Empowering Future Developers: Angular Mentorship" data-full="Full article content for card 2...">
+        <div class="img-wrap"><img src="https://nrichvideos.objectstore.e2enetworks.net/pJ62undefined" alt="card 2"></div>
+        <div class="card-body">
+          <div class="card-title">Empowering Future Developers: Angular Mentorship in Modern .NET Applications</div>
+          <div class="card-excerpt"><strong>Author: Archana Patil.</strong> Technical Lead - Cloud Solutions Architect... Published March 2025</div>
+          <div class="card-meta">
+            <div class="author">Rating<br><strong>⭐⭐⭐⭐⭐</strong></div>
+            <a class="view-btn" href="{% static 'blog_page_2.html' %}" target="_blank">
+             Know More →
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <article class="blog-card" data-author="Vinayak Patil" data-title="Empowering Future Cloud Professionals" data-full="Full article content for card 3...">
+        <div class="img-wrap"><img src="https://nrichvideos.objectstore.e2enetworks.net/4ZBnundefined" alt="card 2"></div>
+        <div class="card-body">
+          <div class="card-title">Empowering Future Cloud Professionals: My Journey Mentoring on Azure and GCP</div>
+          <div class="card-excerpt"><strong>Author: Nikita Dhelwan.</strong> Cloud Solutions Architect... Published JAN 2025</div>
+          <div class="card-meta">
+            <div class="author">Rating<br><strong>⭐⭐⭐⭐</strong></div>
+          
+            <a class="view-btn" data-bs-toggle="modal" data-bs-target="#viewModal" data-title="Empowering Future Cloud Professionals" data-author="Vinayak Patil" data-image="card_3.png">Know More →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="blog-card" data-author="Vinayak Patil" data-title="Business Analyst Profile and Essential Skill Set" data-full="Full article content for card 4...">
+        <div class="img-wrap"><img src="https://nrichvideos.objectstore.e2enetworks.net/LTc0undefined" alt="card 4"></div>
+        <div class="card-body">
+          <div class="card-title">Business Analyst Profile and Essential Skill Set</div>
+          <div class="card-excerpt"><strong>Author: Vinayak Patil.</strong> Senior Manager – Learning & Development, Full Stack Java & Cloud Specialist...</div>
+          <div class="card-meta">
+            <div class="author">Rating<br><strong>⭐⭐⭐⭐⭐</strong></div>
+            <a class="view-btn" data-bs-toggle="modal" data-bs-target="#viewModal" data-title="Business Analyst Profile and Essential Skill Set" data-author="Vinayak Patil" data-image="card_4.png">Know More →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="blog-card" data-author="Vinayak Patil" data-title="Mastering Java in the Modern Tech Era" data-full="Full article content for card 5...">
+        <div class="img-wrap"><img src="https://nrichvideos.objectstore.e2enetworks.net/Da8lundefined" alt="card 5"></div>
+        <div class="card-body">
+          <div class="card-title">Mastering Java in the Modern Tech Era: Insights</div>
+          <div class="card-excerpt"><strong>Author: Sachin Golhar.</strong> Senior Manager - Learning & Development, Full Stack Java & Cloud Specialist...</div>
+          <div class="card-meta">
+            <div class="author">Rating<br><strong>⭐⭐⭐⭐</strong></div>
+            <a class="view-btn" data-bs-toggle="modal" data-bs-target="#viewModal" data-title="Mastering Java in the Modern Tech Era" data-author="Vinayak Patil" data-image="card_5.png">Know More →</a>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- <div class="load-more-wrap">
+      <button id="loadMore" class="btn btn-success">Load More</button>
+    </div> -->
+  </main>
+
+  <!-- FOOTER -->
+  <!-- <footer class="mt-4">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div>© <strong>ITPRENEUR</strong> — All rights reserved</div>
+      <div><small class="text-muted">Made with ❤️</small></div>
+    </div>
+  </footer> -->
+
+  <!-- Modal for card details -->
+  <div class="modal fade" id="viewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <h5 id="modalTitle" class="modal-title"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-md-5">
+              <img id="modalImage" src="" alt="" class="img-fluid rounded">
+            </div>
+            <div class="col-md-7">
+              <p id="modalAuthor" class="mb-2 text-muted"></p>
+              <p id="modalFull">Detailed content goes here. Replace with the full teacher/blog information. You can set this text dynamically or fetch.</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-0">
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="#" class="btn btn-success">Open Full Post</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap + small JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Fill modal when clicking "Know More"
+    document.querySelectorAll('.view-btn').forEach(btn=>{
+      btn.addEventListener('click', function(e){
+        const t = this.dataset.title || '';
+        const a = this.dataset.author || '';
+        const img = this.dataset.image || '';
+        document.getElementById('modalTitle').textContent = t;
+        document.getElementById('modalAuthor').textContent = 'Author: ' + a;
+        document.getElementById('modalImage').src = img;
+        // you can also fetch/insert full article text
+        document.getElementById('modalFull').textContent = this.closest('.blog-card').dataset.full || 'Article details...';
+      });
+    });
+
+    // Example "Load More" stub — replicates existing cards (client-side)
+    // document.getElementById('loadMore').addEventListener('click', function(){
+    //   // This demo simply clones the first 3 cards to simulate more results.
+    //   const grid = document.getElementById('cards');
+    //   const items = grid.querySelectorAll('.blog-card');
+    //   for(let i=0;i<3;i++){
+    //     const clone = items[i].cloneNode(true);
+    //     // rewire modal listeners for the cloned card's link
+    //     clone.querySelectorAll('.view-btn').forEach(btn=>{
+    //       btn.addEventListener('click', function(){
+    //         const t = this.dataset.title || '';
+    //         const a = this.dataset.author || '';
+    //         const img = this.dataset.image || '';
+    //         document.getElementById('modalTitle').textContent = t;
+    //         document.getElementById('modalAuthor').textContent = 'Author: ' + a;
+    //         document.getElementById('modalImage').src = img;
+    //         document.getElementById('modalFull').textContent = this.closest('.blog-card').dataset.full || 'Article details...';
+    //       });
+    //     });
+    //     grid.appendChild(clone);
+    //   }
+    //   // optionally hide button
+    //   // this.style.display = 'none';
+    // });
+  </script>
+<!-- </body>
+</html> -->
+
+{% endblock %}

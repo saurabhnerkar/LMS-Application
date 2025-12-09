@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% include 'teacher/_sidebar.html' %}
+
+<!-- Go Back Button -->
+  
+  
+<div class="div1" style="margin-left:200px; padding:35px; background:#f4f8fb; min-height:100vh;">
+  <a href="javascript:history.back()" class="btn btn-outline-danger go-back-btn" >
+    <i class="fas fa-arrow-left"></i> Go Back
+  </a>
+<div class="container mt-5">
+  
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-primary text-white">
+      <h4>Grade Submission</h4>
+    </div>
+    <div class="card-body">
+      <h5 class="mb-3">{{ submission.enrollment.student.full_name }}</h5>
+      <p><strong>Assignment:</strong> {{ assignment.title }}</p>
+      <p><strong>Submitted On:</strong> {{ submission.submitted_on|date:"M d, Y H:i" }}</p>
+      {% if submission.file %}
+        <a href="{{ submission.file.url }}" target="_blank" class="btn btn-outline-success mb-3">
+          <i class="fa-solid fa-download me-2"></i>View Submitted File
+        </a>
+      {% endif %}
+
+      <form method="post" class="mt-4">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label">Grade</label>
+          {{ form.grade }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Remarks</label>
+          {{ form.remarks }}
+        </div>
+        <button type="submit" class="btn btn-primary">Save Grade</button>
+        <a href="{% url 'teacher:assignment_submissions' assignment.id %}" class="btn btn-secondary">Back</a>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}

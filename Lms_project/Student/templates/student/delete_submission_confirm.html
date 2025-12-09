@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include "student/_sidebar.html" %}
+
+<div class="main-content" style="margin-left:200px; padding:35px; background:#f4f8fb; min-height:100vh;">
+  <h3 class="text-dark text-center fw-bold mb-4">Delete Submission</h3>
+
+  <div class="confirmation-box p-4 rounded shadow-sm" style="max-width: 500px; margin: auto; background: #fff; border: 1px solid #ced4da;">
+    <p class="mb-4">
+      Are you sure you want to delete your submission for <strong>{{ assignment.title }}</strong>?
+    </p>
+
+    <form method="POST" class="d-flex gap-2 justify-content-center">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Yes, Delete</button>
+      <a href="{% url 'student:view_assignment' course.id assignment.id %}" class="btn btn-secondary">Cancel</a>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

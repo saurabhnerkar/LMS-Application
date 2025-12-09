@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include 'student/_sidebar.html' %}
+
+<div class="main-content" style="margin-left:200px; padding:35px; background:#f4f8fb; min-height:100vh;">
+  <h2 class="mb-4 text-center">{{ course.title }}</h2>
+
+  <p class="text-center">
+    <strong>Instructor:</strong>
+    {% if course.teacher %}
+      {{ course.teacher.user.first_name }} {{ course.teacher.user.last_name }}
+    {% else %}
+      TBA
+    {% endif %}
+  </p>
+
+  <p class="text-center">{{ course.description }}</p>
+
+  {% if not is_enrolled %}
+    <!-- Not enrolled: show enroll button -->
+    <div class="text-center mt-4">
+      {% if user.is_authenticated %}
+        <a href="{% url 'student:dummy_payment' course.pk %}" class="btn btn-primary btn-lg">Enroll & Pay</a>
+      {% else %}
+        <a href="{% url 'accounts:register' %}?next={% url 'student:dummy_payment' course.pk %}" class="btn btn-primary btn-lg">Enroll & Pay</a>
+      {% endif %}
+    </div>
+
+  {% else %}
+    <!-- Enrolled: show section cards -->
+    <hr class="my-5" />
+    <h4 class="text-center mb-4">Course Materials</h4>
+
+    <div class="row justify-content-center g-4">
+      <!-- Notes Card -->
+      <div class="col-md-4">
+        <div class="card shadow-lg border-0 h-100 text-center">
+          <div class="card-body">
+            <h4 class="card-title mb-3">📘 Notes</h4>
+            <p class="card-text text-muted">
+              Access all lecture notes, resources, and study materials shared by your instructor.
+            </p>
+            <a href="{% url 'student:assigned_notes' course.id %}" class="btn btn-outline-primary mt-3">View Notes</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Assignments Card -->
+      <div class="col-md-4">
+        <div class="card shadow-lg border-0 h-100 text-center">
+          <div class="card-body">
+            <h4 class="card-title mb-3">📝 Assignments</h4>
+            <p class="card-text text-muted">
+              Submit your assignments and check due dates or attached files from your teacher.
+            </p>
+            <a href="{% url 'student:assigned_assignments' course.id %}" class="btn btn-outline-success mt-3">View Assignments</a>
+          </div>
+        </div>
+      </div>
+      <!-- Quizzes Card -->
+      <div class="col-md-4">
+        <div class="card shadow-lg border-0 h-100 text-center">
+          <div class="card-body">
+            <h4 class="card-title mb-3">🧩 Quizzes</h4>
+            <p class="card-text text-muted">
+              Participate in quizzes to test your knowledge and track your performance.
+            </p>
+            <a href="{% url "student:student_quiz_list" course.id %}" class="btn btn-outline-info mt-3">View Quizzes</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

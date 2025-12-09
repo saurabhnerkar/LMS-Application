@@ -1,0 +1,322 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<style>
+/* ============================
+   GLOBAL STYLING
+============================ */
+body {
+    /* background: #f8f9fb; */
+     background: #f2f4f8;
+    margin: 0;
+    padding: 0;
+}
+
+.container h2 {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.h5{
+    color:#5c636a;
+}
+/* ============================
+   CARD DESIGN
+============================ */
+.card {
+    border-radius: 12px;
+    border: none;
+    transition: 0.3s ease;
+    background: #ffffff;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 1rem 2rem rgba(0,0,0,0.1);
+}
+
+/* ============================
+   QUESTION BLOCK
+============================ */
+.border.p-3 {
+     border-radius: 10px !important;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb !important;
+}
+
+.border.p-3 label {
+    font-weight: 500;
+}
+
+/* =================================
+   INPUT STYLING
+================================ */
+textarea.form-control,
+input.form-control {
+    border-radius: 8px;
+    border: 1px solid #d4d4d4;
+    transition: 0.2s;
+}
+
+textarea.form-control:focus,
+input.form-control:focus {
+    border-color: #4c8bf5;
+    box-shadow: 0 0 0 0.2rem rgba(76, 139, 245, 0.25);
+}
+
+/* ============================
+   OPTION ITEM STYLING
+============================ */
+.option-item {
+    background: #fff;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #e2e2e2;
+}
+
+.option-item input[type="text"] {
+    border-radius: 6px;
+}
+
+/* ============================
+   BUTTONS
+============================ */
+.btn-primary,
+.btn-secondary,
+.btn-outline-secondary {
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 8px 16px;
+}
+
+.btn-secondary:hover {
+    background: #5c636a;
+}
+
+.btn-outline-secondary:hover {
+    background: #e9ecef;
+}
+
+.btn-sm {
+    padding: 4px 10px;
+}
+
+/* ============================
+   RESPONSIVE DESIGN
+============================ */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .card {
+        padding: 15px !important;
+    }
+
+    textarea.form-control,
+    input.form-control {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    .option-item {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
+    .option-item input[type="text"] {
+        margin-bottom: 6px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    h2 {
+        font-size: 1.4rem;
+        text-align: center;
+    }
+
+    .card h5 {
+        font-size: 1.1rem;
+        text-align: center;
+    }
+
+    #question-container > div {
+        padding: 15px !important;
+    }
+
+    textarea.form-control,
+    input.form-control {
+        font-size: 0.85rem;
+    }
+
+    .btn-primary {
+        width: 100%;
+    }
+}
+
+/* hide footer */
+footer{
+    display: none;
+}
+
+
+
+.container {
+    max-width: 800px;
+    margin: auto;
+}
+
+.option-item {
+    background: #ffffff;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #e2e2e2;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-outline-secondary {
+    padding: 10px 16px;
+}
+
+/* ============================
+   RESPONSIVE DESIGN
+============================ */
+
+/* Tablets */
+/* @media (max-width: 768px) {
+
+    .card {
+        padding: 15px !important;
+    }
+
+    textarea.form-control,
+    input.form-control {
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .option-item {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
+    .option-item input[type="text"] {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+}
+
+/* Mobile Screens */
+@media (max-width: 576px) {
+
+    h2 {
+        font-size: 1.3rem;
+        text-align: center;
+    }
+
+    .card h5 {
+        font-size: 1.1rem;
+        text-align: center;
+    }
+
+    #question-container > div {
+        padding: 15px !important;
+    }
+
+    textarea.form-control,
+    input.form-control {
+        font-size: 0.85rem;
+    }
+
+    .btn-primary {
+        width: 100%;
+    }
+} 
+footer{
+  display: none;
+}
+
+</style>
+
+<div class="container mt-4">
+  <h2>Create Quiz</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="card p-4 mb-4 shadow-sm">
+      {{ quiz_form.as_p }}
+    </div>
+
+    <div class="card p-4 shadow-sm">
+      <h5>Questions</h5>
+      <div id="question-container"></div>
+      <button type="button" class="btn btn-secondary mt-3" onclick="addQuestion()">➕ Add Question</button>
+    </div>
+
+    <button type="submit" class="btn btn-primary mb-5">Save Quiz</button>
+    <!-- <button type="submit" class="btn btn-primary mt-4">Cancel</button> -->
+    <a href="javascript:history.back()" class="btn btn-secondary mb-5 ms-4">
+             Cancel
+            </a>
+
+  </form>
+</div>
+
+<script>
+let questionIndex = 0;
+
+function addQuestion() {
+    const qDiv = document.createElement('div');
+    qDiv.classList.add('border', 'p-3', 'mt-3');
+    qDiv.innerHTML = `
+        <label><strong>Question:</strong></label>
+        <textarea name="question_text[]" class="form-control" rows="2" required></textarea>
+        <label class="mt-2">Marks:</label>
+        <input type="number" name="question_marks[]" class="form-control" min="1" value="1">
+
+        <div class="mt-3" id="options_${questionIndex}">
+            <h6>Options:</h6>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-secondary mt-2" onclick="addOption(${questionIndex})">Add Option</button>
+    `;
+    document.getElementById('question-container').appendChild(qDiv);
+    questionIndex++;
+}
+
+function addOption(qIndex) {
+    const optionsDiv = document.getElementById(`options_${qIndex}`);
+    const count = optionsDiv.querySelectorAll('.option-item').length;
+    const optDiv = document.createElement('div');
+    optDiv.classList.add('option-item', 'd-flex', 'align-items-center', 'mt-2');
+    optDiv.innerHTML = `
+        <input type="text" name="option_text_${qIndex}[]" class="form-control me-2" placeholder="Option text" required>
+        <input type="checkbox" name="correct_option_${qIndex}[]" value="${count}">
+        <label class="ms-1">Correct</label>
+    `;
+    optionsDiv.appendChild(optDiv);
+}
+</script>
+{% endblock %}

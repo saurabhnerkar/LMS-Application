@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static form_tags %}
+
+{% block content %}
+{% include 'teacher/_sidebar.html' %}
+<!-- Go Back Button -->
+  <a href="javascript:history.back()" class="btn btn-secondary go-back-btn" style ="margin-left: 8.5em;">
+    <i class="fas fa-arrow-left"></i> Go Back
+  </a>
+  
+<div class="div1" style="margin-left:200px; padding:35px; background:#f4f8fb; min-height:100vh;">
+  <div class="container mt-5">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Edit Quiz</h4>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Title</label>
+            {{ form.title|add_class:"form-control" }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            {{ form.description|add_class:"form-control" }}
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Total Marks</label>
+              {{ form.total_marks|add_class:"form-control" }}
+            </div>
+            <div class="row">
+  <div class="col-md-6 mb-3">
+    <label class="form-label">Start Time</label>
+    {{ form.start_time|add_class:"form-control" }}
+  </div>
+  <div class="col-md-6 mb-3">
+    <label class="form-label">End Time</label>
+    {{ form.end_time|add_class:"form-control" }}
+  </div>
+</div>
+
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'teacher:course_quizzes' course.id %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

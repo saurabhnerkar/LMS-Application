@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+/* ----------------------------------------
+   MAIN CONTENT RESPONSIVE WITH SIDEBAR
+----------------------------------------- */
+#main-content {
+    margin-left: 250px;
+    padding: 20px;
+    transition: 0.3s ease;
+}
+
+/* Tablet & Mobile */
+@media (max-width: 992px) {
+    #main-content {
+        margin-left: 0 !important;
+        padding: 15px;
+    }
+}
+
+/* ----------------------------------------
+   GO BACK BUTTON RESPONSIVE
+----------------------------------------- */
+.go-back-btn {
+    margin-left: 0.2em;
+}
+
+@media (max-width: 992px) {
+    .go-back-btn {
+        margin-left: 0 !important;
+        width: 100%;
+    }
+}
+
+/* ----------------------------------------
+   HEADER + BUTTON RESPONSIVE
+----------------------------------------- */
+@media (max-width: 768px) {
+    .d-flex {
+        flex-direction: column !important;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .d-flex a.btn,
+    .d-flex .alert {
+        width: 100%;
+    }
+
+    h2 {
+        font-size: 20px !important;
+    }
+}
+
+/* ----------------------------------------
+   CARD GRID RESPONSIVE
+----------------------------------------- */
+.col-md-4 {
+    display: flex;
+}
+
+@media (max-width: 992px) {
+    .col-md-4 {
+        width: 50% !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .col-md-4 {
+        width: 100% !important;
+    }
+}
+
+/* ----------------------------------------
+   CARD UI + TEXT
+----------------------------------------- */
+.card {
+    border-radius: 14px;
+    transition: 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+@media (max-width: 576px) {
+    .card-title {
+        font-size: 16px !important;
+    }
+
+    .card-text {
+        font-size: 14px !important;
+    }
+}
+footer{
+  display: none;
+}
+</style>
+
+
+{% include 'teacher/_sidebar.html' %}
+<div class="div1" style="margin-left:200px; padding:10px; background:#f4f8fb; min-height:100vh;">
+<div class="container mt-5">
+  <!-- Breadcrumb removed -->
+
+  <a href="javascript:history.back()" class="btn btn-outline-danger go-back-btn">
+    <i class="fas fa-arrow-left"></i> Go Back
+</a>
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4 mt-5">
+    <h2 class="mb-0">
+      <i class="fa-solid fa-tasks me-2 text-primary"></i>
+      Course Assignments
+    </h2>
+    <a href="{% url 'teacher:add_assignment' course.id %}" class="btn btn-primary">
+      <i class="fa-solid fa-plus me-2"></i>Add New Assignment
+    </a>
+  </div>
+
+  {% if assignments_data %}
+    <div class="row">
+      {% for data in assignments_data %}
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-light ">
+              <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">{{ data.assignment.title }}</h5>
+                <div class="dropdown">
+                  <button class="btn btn-link text-dark" type="button" data-bs-toggle="dropdown">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <a class="dropdown-item" href="{% url 'teacher:assignment_submissions' data.assignment.id %}">
+                        <i class="fa-solid fa-eye me-2"></i>View Submissions
+                      </a>
+                    </li>
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                      <a class="dropdown-item text-danger" href="{% url 'teacher:delete_assignment' data.assignment.id %}">
+                        <i class="fa-solid fa-trash me-2"></i>Delete
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <p class="text-muted mb-3">{{ data.assignment.instructions|truncatewords:30 }}</p>
+              
+              <!-- Due Date -->
+              <div class="d-flex align-items-center mb-3">
+                <i class="fa-solid fa-calendar text-primary me-2"></i>
+                <span>Due: {{ data.assignment.due_date|date:"M d, Y" }}</span>
+              </div>
+
+              <!-- Submission Stats --> <!---->
+              <div class="progress mb-3" style="height: 10px;">
+                <div class="progress-bar bg-success" role="progressbar" 
+                     style="width: {{ data.submission_percentage }} %"
+                     aria-valuenow="{{ data.submission_percentage }}" 
+                     aria-valuemin="0" aria-valuemax="100">
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between text-muted small">
+                <span>
+                  <i class="fa-solid fa-check-circle text-success me-1"></i>
+                  {{ data.submitted_count }} Submitted
+                </span>
+                <span>
+                  <i class="fa-solid fa-clock text-warning me-1"></i>
+                  {{ data.not_submitted_count }} Pending
+                </span>
+                <span>
+                  <i class="fa-solid fa-users text-primary me-1"></i>
+                  {{ data.total_students }} Total
+                </span>
+              </div>
+            </div>
+            <div class="card-footer bg-white border-0">
+              <a href="{% url 'teacher:assignment_submissions' data.assignment.id %}" 
+                 class="btn btn-outline-primary w-100">
+                <i class="fa-solid fa-list-check me-2"></i>View Details
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center">
+      <i class="fa-solid fa-info-circle me-2"></i>
+      No assignments created yet for this course.
+      <a href="{% url 'teacher:add_assignment' course.id %}" class="alert-link">Create your first assignment</a>
+    </div>
+  {% endif %}
+</div>
+</div>
+{% endblock %}

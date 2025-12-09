@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load form_tags %}
+
+{% block content %}
+<style>
+
+/* ================================
+   SIDEBAR + MAIN LAYOUT FIX
+================================ */
+#main-content {
+    margin-left: 260px;          /* space for sidebar */
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.sidebar {
+    width: 250px !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 2000;
+}
+
+/* Move Go Back Button properly */
+.go-back-btn {
+    margin-left: 260px !important;
+    margin-top: 10px;
+}
+
+/* ===========================================
+   RESPONSIVE BEHAVIOR (Tablet)
+=========================================== */
+@media (max-width: 991px) {
+
+    #main-content {
+        margin-left: 0 !important;    /* sidebar hidden */
+        padding: 15px;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: -260px;                  /* hide sidebar */
+        transition: all 0.3s ease;
+    }
+
+    .sidebar.active {
+        left: 0;                        /* show sidebar */
+    }
+
+    .go-back-btn {
+        margin-left: 0 !important;
+    }
+}
+
+/* ===========================================
+   MOBILE VIEW
+=========================================== */
+@media (max-width: 576px) {
+
+    #main-content {
+        padding: 10px;
+    }
+
+    .card {
+        margin-top: 10px !important;
+    }
+
+    .card-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .go-back-btn {
+        width: 100%;
+        margin-left: 0 !important;
+        margin-top: 12px;
+    }
+
+    .btn {
+        width: 100%;
+        margin-top: 8px;
+    }
+}
+
+/* Fix spacing in form */
+form .form-label {
+    font-weight: 600;
+}
+
+.alert-info {
+    font-size: 0.95rem;
+}
+
+
+/* Hide footer only on this page (optional) */
+footer {
+    display: none;
+}
+
+</style>
+
+{% include 'teacher/_sidebar.html' %}
+
+<!-- Go Back Button -->
+  <!-- <a href="javascript:history.back()" class="btn btn-secondary go-back-btn" style ="margin-left: 8.5em;">
+    <i class="fas fa-arrow-left"></i> Go Back
+  </a> -->
+
+<div id="main-content">
+<div class="container mt-5">
+  <div class="card shadow-lg border-0">
+    <div class="card-header bg-primary text-white text-center">
+      <h3 class="mb-0">Add New Assignment</h3>
+    </div>
+
+    <div class="card-body p-4">
+      <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        {% csrf_token %}
+        
+        <!-- Display Non-field Errors -->
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">
+            {{ form.non_field_errors }}
+          </div>
+        {% endif %}
+        <!-- Course Info -->
+        <div class="alert alert-info mb-4">
+          <h5 class="alert-heading mb-1">
+            <i class="fa-solid fa-book me-2"></i>Course: {{ course.title }}
+          </h5>
+          <small class="text-muted">Creating assignment for this course</small>
+        </div>
+
+        <!-- Title Field -->
+        <div class="mb-3">
+          <label for="id_title" class="form-label">Assignment Title</label>
+          {{ form.title|add_class:"form-control" }}
+          {% if form.title.errors %}
+            <div class="text-danger small">{{ form.title.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Instructions Field -->
+        <div class="mb-3">
+          <label for="id_instructions" class="form-label">Instructions</label>
+          {{ form.instructions|add_class:"form-control" }}
+          {% if form.instructions.errors %}
+            <div class="text-danger small">{{ form.instructions.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Due Date Field -->
+        <div class="mb-3">
+          <label for="id_due_date" class="form-label">Due Date</label>
+          {{ form.due_date|add_class:"form-control" }}
+          {% if form.due_date.errors %}
+            <div class="text-danger small">{{ form.due_date.errors }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+          <button type="submit" class="btn btn-success px-4">
+            <i class="fa-solid fa-upload me-2"></i> Create Assignment
+          </button>
+          {% if course %}
+            <a href="{% url 'teacher:teacher_dashboard'%}" class="btn btn-secondary px-4 ms-2">
+              <i class="fa-solid fa-arrow-left me-2"></i>Cancel
+            </a>
+          {% else %}
+            <a href="{% url 'teacher:teacher_dashboard' %}" class="btn btn-secondary btn-lg flex-fill">
+              <i class="fa-solid fa-arrow-left me-2"></i>Cancel
+            </a>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}

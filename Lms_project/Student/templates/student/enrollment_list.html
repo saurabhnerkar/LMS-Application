@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">My Enrollments</h2>
+  <div class="row gy-4">
+    {% for enrollment in enrollments %}
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        {% if enrollment.course.image %}
+          <img src="{{ enrollment.course.image.url }}" class="card-img-top" style="height:220px;object-fit:cover;" alt="{{ enrollment.course.title }}">
+        {% else %}
+          <img src="https://www.svgrepo.com/show/303229/online-course-education.svg" class="card-img-top" style="height:220px;object-fit:cover;" alt="Default Course">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ enrollment.course.title }}</h5>
+          <p class="card-text">{{ enrollment.course.description|truncatewords:18 }}</p>
+          <span class="badge bg-info">Status: {{ enrollment.status|default:"Active" }}</span>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+          <span class="fw-bold text-success">₹{{ enrollment.course.price }}</span>
+          <a href="{% url 'student:course_detail' enrollment.course.pk %}" class="btn btn-outline-primary btn-sm">View Course</a>
+          <a href="{% url 'student:enrollment_delete' enrollment.pk %}"
+             class="btn btn-danger btn-sm"
+             onclick="return confirm('Are you sure you want to remove this course?');">Delete</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="alert alert-warning">You have not enrolled in any courses yet.</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

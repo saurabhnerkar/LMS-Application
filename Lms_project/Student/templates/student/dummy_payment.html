@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Course Payment</h3>
+                </div>
+                <div class="card-body">
+                    <h5>Course: {{ course.title }}</h5>
+                    <p>Amount: ₹{{ course.price }}</p>
+                    <p>Student: {{ student.user.get_full_name|default:student.user.username }}</p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="card_number" class="form-label">Card Number</label>
+                            <input type="text" name="card_number" class="form-control" id="card_number" placeholder="**** **** **** ****" required>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="expiry" class="form-label">Expiry Date</label>
+                                <input type="text" name="expiry" class="form-control" id="expiry" placeholder="MM/YY" required>
+                            </div>
+                            <div class="col">
+                                <label for="cvv" class="form-label">CVV</label>
+                                <input type="text" name="cvv" class="form-control" id="cvv" placeholder="***" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Complete Payment</button>
+                        <a href="{% url 'student:course_list' %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

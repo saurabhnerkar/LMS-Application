@@ -1,0 +1,670 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LMS{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* === General Layout === */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-family: "Poppins", sans-serif;
+            background-color: #ffffff;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        /* Updated upstream */
+        /* .footer {
+            background-color: #f5f8faff;
+            color: black;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        .navbar {
+            background-color: white !important;
+        }
+        .navbar-brand, 
+        .nav-link, 
+        .navbar-toggler-icon {
+            color: black !important;
+        }
+======= */
+
+        /* === Navbar === */
+        .navbar {
+            background-color: #ffffff !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            padding: 0.5rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+        }
+
+        /* Brand */
+        .navbar-brand img {
+            height: 40px;
+            max-width: 100%;
+        }
+
+     
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2e7d32 !important;
+        }
+
+        /* Nav links */
+        .navbar-nav .nav-link {
+            color: #333 !important;
+            font-weight: 500;
+            font-size: 1rem;
+            margin: 0 0.25rem;
+            transition: color 0.2s ease;
+        }
+
+        .navbar-nav .nav-link i {
+            margin-right: 5px;
+            color: #2e7d32;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: #1b5e20 !important;
+        }
+
+        /* Toggler */
+        .navbar-toggler {
+            border: 1px solid #2e7d32;
+            border-radius: 6px;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='green' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+        }
+
+        /* Navbar collapse layout */
+        .navbar-collapse {
+            justify-content: flex-end;
+        }
+
+        /* Profile links */
+        .navbar-nav .nav-item:last-child .nav-link {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-nav .nav-item:last-child .nav-link img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        /* .nav-item {
+  margin: 0 auto;
+} */
+        /* === Footer === */
+        .footer {
+            background-color: #f8f9fa;
+            color: #212529;
+            /* text-align: center; */
+            padding: 2rem 1rem;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .footer img {
+            height: 40px;
+            max-width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .footer a {
+            color: #333;
+            text-decoration: none;
+            margin: 0 0.5rem;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+            text-align: right;
+
+        }
+
+        .footer a:hover {
+            color: #2e7d32;
+        }
+
+        .footer .social-icons {
+            margin: 1rem 0;
+            text-align: center;
+
+
+        }
+
+        .footer .fab {
+            font-size: 1.2rem;
+        }
+
+        .footer small {
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        /* === Footer Layout Fix (clean + aligned) === */
+        .footer .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Center logo & social icons */
+        .footer img,
+        .footer .social-icons {
+            margin: 0 auto 0.5rem auto;
+        }
+
+        /* Copyright text → left */
+        .footer small {
+            width: 100%;
+            text-align: left;
+            margin-top: 0.5rem;
+
+        }
+
+        /* Footer links line → right */
+        .footer a[href*="Validate"],
+        .footer a[href*="Contact"],
+        .footer a[href*="Terms"],
+        .footer a[href*="Privacy"] {
+            display: inline-block;
+            margin: 0 0.4rem;
+        }
+
+        .footer .link-row {
+            width: 100%;
+            text-align: right;
+            margin-top: 0.3rem;
+        }
+
+        /* === Final Footer Alignment Fix (exact layout as image) === */
+        .footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            /* keeps responsive */
+            text-align: left;
+        }
+
+        /* Left side copyright text */
+        .footer small {
+            margin: 0;
+            font-size: 0.9rem;
+            flex: 1 1 auto;
+        }
+
+        /* Right side links */
+        .footer .link-row {
+            flex: 1 1 auto;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .footer .link-row a {
+            display: inline-block;
+            color: #333;
+            text-decoration: none;
+            margin: 0 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .footer .link-row a:hover {
+            color: #2e7d32;
+        }
+
+        /* Mobile View: stack vertically */
+        @media (max-width: 768px) {
+            .footer .container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer .link-row {
+                text-align: center;
+                margin-top: 0.5rem;
+                white-space: normal;
+            }
+        }
+
+
+        /* === Responsive Adjustments === */
+
+
+        /* Tablets and smaller (≤992px) */
+        @media (max-width: 992px) {
+            .navbar-collapse {
+                background-color: #fff;
+                border-top: 1px solid #e5e5e5;
+                border-radius: 0 0 10px 10px;
+                padding: 1rem 0.5rem;
+            }
+
+            .navbar-nav {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                /* ⬅️ Align links to left instead of center */
+                gap: 0.25rem;
+                text-align: left;
+                /* ⬅️ Make sure icons + text align left */
+            }
+
+            .navbar-nav .nav-item {
+                width: 100%;
+            }
+
+            .navbar-nav .nav-item:not(:last-child) {
+                border-bottom: 1px solid #f0f0f0;
+            }
+
+            .navbar-nav .nav-link {
+                width: 100%;
+                padding: 0.6rem 1rem;
+                color: #2e7d32 !important;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+            }
+
+            .navbar-brand img {
+                height: 36px;
+            }
+        }
+
+
+        /* Phones (≤576px) */
+        @media (max-width: 576px) {
+            .navbar-brand img {
+                height: 32px;
+            }
+
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+
+            /* Navbar links tighter */
+            .navbar-nav .nav-link {
+                font-size: 0.95rem;
+            }
+
+            /* Footer compact */
+            .footer {
+                padding: 1.5rem 0.5rem;
+            }
+
+            .footer img {
+                height: 32px;
+            }
+
+            .footer .social-icons a {
+                margin: 0 0.3rem;
+                font-size: 1rem;
+            }
+
+            .footer small {
+                font-size: 0.8rem;
+            }
+
+            .footer a {
+                display: inline-block;
+                margin: 0.2rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Ultra-small screens (≤400px) */
+        @media (max-width: 400px) {
+            .navbar-nav .nav-link {
+                font-size: 0.9rem;
+                padding: 0.4rem;
+            }
+
+            .navbar-brand img {
+                height: 28px;
+            }
+        }
+
+        .nav-link:hover {
+            color: #28a745 !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg ">
+
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <!-- <i class="fas fa-graduation-cap"></i> LMS -->
+                <img src="{% static 'images/itpreneur-logo.png' %}" alt="ITpreneur Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">
+                            <i class="fas fa-home fa-lg"></i> Home
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    {% if user.role == 'teacher' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'teacher:teacher_dashboard' %}">
+                            <i class="fas fa-tachometer-alt fa-xl"></i> Dashboard
+                        </a>
+                    </li>
+
+                    <!-- PROFILE -->
+                    <div style="position:relative;">
+                        <img id="profile-logo-teacher" src="https://nrichvideos.objectstore.e2enetworks.net/assets/profile.png"
+                            style="height:40px; cursor:pointer; border-radius:50%;">
+                        <span id="profile-trigger-teacher" style="margin-left:8px; cursor:pointer;">
+    Hi, {{ request.user.first_name }}
+</span>
+
+
+                        <div id="profile-dropdown-teacher" style="display:none; position:absolute; top:58px; right:0; min-width:230px; 
+                        background:white; border-radius:10px;
+                        box-shadow:0 2px 12px rgba(0,0,0,0.15); z-index:999;">
+                            <div style="padding:15px; border-bottom:1px solid #eee;">
+                                <strong>{{ request.user.first_name }}</strong>
+                            </div>
+
+                            <a href="{% url 'teacher:update_profile' %}"
+                                style="display:block; padding:12px 20px; text-decoration:none; color:#333;">
+                                👤 My Profile
+                            </a>
+
+                            <a href="{% url 'accounts:logout' %}"
+                                style="display:block; padding:12px 20px; text-decoration:none; color:#333;">
+                                ↪ Sign Out
+                            </a>
+                        </div>
+                    </div>
+
+                    </li>
+
+                    <!-- Notification -->
+                    <li>
+                        <div
+                            style="display: flex; justify-content: flex-end; align-items: center; padding-bottom: 18px;">
+
+                            <!-- NOTIFICATIONS -->
+                            <div style="position: relative; margin-right: 25px;">
+                                <button id="notif-bell-teacher" style="background: none; border: none; cursor: pointer;">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqAAgZjBHvjAPn3aUSke-A0Ipu4XF0PYViMA&s"
+                                        style="height: 35px;">
+
+                                    {% if notifications_count %}
+                                    <span style="position: absolute; top: 0; right: 0; background: #fa6868; color: #fff;
+                                 border-radius: 50%; padding: 2px 6px; font-size: 12px;">
+                                        {{ notifications_count }}
+                                    </span>
+                                    {% endif %}
+                                </button>
+
+                                <!-- DROPDOWN -->
+                                <div id="notifications-dropdown-teacher" style="display:none; position:absolute; top:42px; right:0; width:340px;
+                        background:#fff; box-shadow:0 2px 10px rgba(0,0,0,0.12);
+                        border-radius:8px; z-index:999;">
+                                    <div style="background:#198754; color:white; padding:15px;
+                            border-radius:8px 8px 0 0; font-weight:600;">
+                                        Notifications
+                                        <span
+                                            style="background:white; color:#198754; padding:3px 10px; border-radius:5px;">
+                                            {{ notifications_count }}
+                                        </span>
+                                        <a href="{% url 'teacher:teacher_mark_all_as_read' %}"
+                                            style="color: #fff; margin-left: auto; text-decoration: none; font-size: 13px;">
+                                            ✔ Mark all as read
+                                        </a>
+                                    </div>
+
+                                    <div style="max-height:300px; overflow-y:auto; padding:12px;">
+                                        {% if notifications %}
+                                        {% for notif in notifications %}
+                                        <div style="padding:10px 0; border-bottom:1px solid #eee;">
+                                            {{ notif.message }}<br>
+                                            <small style="color:#888;">{{ notif.created_at|date:"M d, Y H:i A"}}</small>
+                                        </div>
+                                        {% endfor %}
+                                        {% else %}
+                                        <p style="color:#777;">No notifications</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    {% elif user.role == 'student' %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'student:student_dashboard' %}">
+                            <i class="fas fa-lg fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+
+                    <li>
+                        <div style="position: relative;">
+                            <img id="profile-logo"
+                                src="https://nrichvideos.objectstore.e2enetworks.net/assets/profile.png" alt="Profile"
+                                style="height: 40px; border-radius: 50%; cursor: pointer;">
+                            <span id="profile-trigger-student" style="margin-left: 9px; cursor: pointer;">Hi,
+    {{ request.user.first_name }} {{ request.user.last_name }}</span>
+
+                            <div id="profile-dropdown"
+                                style="display: none; position: absolute; top: 58px; right: 0; background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.13); border-radius: 13px; min-width: 230px; z-index: 1000;">
+                                <div style="padding: 18px 24px; border-bottom: 1px solid #f1f1f1;">
+                                    <strong>Hi, {{ request.user.first_name }}</strong>
+                                </div>
+                                <div style="padding: 8px 0;">
+                                    <a href="{% url 'student:studentprofile_detail' %}"
+                                        style="display: flex; align-items: center; padding: 9px 28px; color: #222; text-decoration: none;">
+                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMSBDUPuDbUF3wr7i-mzGixQ3DnAwgSObvNg&s"
+                                            height="20" style="margin-right: 13px;">My Profile
+                                    </a>
+                                    <a href="{% url 'student:student_change_password' %}"
+                                        style="display: flex; align-items: center; padding: 9px 28px; color: #222; text-decoration: none;">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/6357/6357048.png" height="20"
+                                            style="margin-right: 13px;">Change Password
+                                    </a>
+                                    <a href="{% url 'accounts:logout' %}"
+                                        style="display: flex; align-items: center; padding: 9px 28px; color: #222; text-decoration: none;">
+                                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlky-Sg1nEZ0BNPd_XQZpBh7KZGBBu5ixzRQ&s"
+                                            height="20" style="margin-right: 13px;">Sign Out
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+                    <li>
+                        <div
+                            style="display: flex; justify-content: flex-end; align-items: center; padding-bottom: 18px;">
+                            <!-- Notification Dropdown -->
+                            <div style="position: relative; margin-right: 25px;">
+                                <button id="notif-bell" style="background: none; border: none; cursor: pointer;">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqAAgZjBHvjAPn3aUSke-A0Ipu4XF0PYViMA&s"
+                                        alt="Notifications" style="height: 35px;">
+                                    {% if notifications_count %}
+                                    <span
+                                        style="position: absolute; top: 0; right: 0; background: #fa6868; color: #fff; border-radius: 50%; padding: 2px 6px; font-size: 12px;">
+                                        {{ notifications_count }}
+                                    </span>
+                                    {% endif %}
+                                </button>
+                                <div id="notifications-dropdown"
+                                    style="display: none; position: absolute; top: 42px; right: 0; width: 340px; z-index: 99; background: #fff; box-shadow: 0 2px 10px rgba(0,0,0,0.12); border-radius: 9px;">
+                                    <div
+                                        style="background: #0071f7; color: #fff; padding: 16px 14px; border-top-left-radius: 9px; border-top-right-radius: 9px; font-weight: 500; display: flex; align-items: center;">
+                                        Notifications
+                                        <span
+                                            style="margin-left: 8px; background: #fff; color: #0071f7; padding: 3px 10px; border-radius: 5px; font-size: 14px;">
+                                            {{ notifications_count }}
+                                        </span>
+                                        <a href="{% url 'student:mark_all_as_read' %}"
+                                            style="color: #fff; margin-left: auto; text-decoration: none; font-size: 13px;">
+                                            ✔ Mark all as read
+                                        </a>
+                                    </div>
+                                    <div style="max-height: 325px; overflow-y: auto; padding: 14px;">
+                                        {% if notifications %}
+                                        <ul style="list-style: none; padding: 0;">
+                                            {% for notif in notifications %}
+                                            <li
+                                                style="padding: 10px 0; border-bottom: 1px solid #f3f3f3; font-size: 15px;">
+                                                {{ notif.message }}
+                                                <span style="display: block; color: #888; font-size: 11px;">
+                                                    {{ notif.created_at|date:"M d, Y H:i A" }}
+                                                </span>
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                        {% else %}
+                                        <div style="color: #333; font-size: 15px;">No notifications.</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                    </li>
+                    {% endif %}
+                    {% else %}
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:login' %}">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:register' %}">
+                            <i class="fas fa-user-plus"></i> Register
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4 content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    {% comment %} footer {% endcomment %}
+    <footer class="footer mb-5">
+    <div class="container text-center mb-5">
+        <img src="{% static 'images/itpreneur-logo.png' %}" alt="ITpreneur Logo">
+        
+        <div class="social-icons mt-2">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+
+        <div class="text-center mt-2">
+            <small>© Copyright ITPRENEUR 2025. Designed by <b>Group 4</b>. All rights reserved.</small>
+        </div>
+
+        <div class="link-row mt-2 text-center">
+            <a href="#">Validate Certificate</a> |
+            <a href="#">Contact Us</a> |
+            <a href="#">Terms of Service</a> |
+            <a href="#">Privacy Policy</a>
+        </div>
+    </div>
+</footer>
+
+
+    <script>
+/* Unified dropdown handlers for student + teacher profile & notifications.
+   - Make sure HTML ids match: 
+     teacher: profile-logo-teacher, profile-trigger-teacher, profile-dropdown-teacher, notif-bell-teacher, notifications-dropdown-teacher
+     student: profile-logo, profile-trigger-student, profile-dropdown, notif-bell, notifications-dropdown
+*/
+
+function setupToggle(triggerEl, logoEl, dropdownEl) {
+    if (!dropdownEl || (!triggerEl && !logoEl)) return;
+
+    function toggle(e) {
+        e && e.stopPropagation();
+        dropdownEl.style.display = (dropdownEl.style.display === 'block') ? 'none' : 'block';
+    }
+
+    if (logoEl) {
+        logoEl.addEventListener('click', function(e) { e.stopPropagation(); toggle(e); });
+    }
+    if (triggerEl) {
+        triggerEl.addEventListener('click', function(e) { e.stopPropagation(); toggle(e); });
+    }
+
+    // Close when clicking outside
+    document.addEventListener('click', function (ev) {
+        if (dropdownEl.style.display === 'block' && !dropdownEl.contains(ev.target) && !(logoEl && logoEl.contains(ev.target)) && !(triggerEl && triggerEl.contains(ev.target))) {
+            dropdownEl.style.display = 'none';
+        }
+    });
+}
+
+// STUDENT profile (ids from your template)
+const sLogo = document.getElementById('profile-logo'); // keep as-is or rename to profile-logo-student
+const sTrigger = document.getElementById('profile-trigger-student');
+const sDrop = document.getElementById('profile-dropdown');
+setupToggle(sTrigger, sLogo, sDrop);
+
+// STUDENT notifications
+const nBell = document.getElementById('notif-bell');
+const nDrop = document.getElementById('notifications-dropdown');
+if (nBell && nDrop) {
+    nBell.addEventListener('click', function(e){ e.stopPropagation(); nDrop.style.display = (nDrop.style.display === 'block') ? 'none' : 'block'; });
+    document.addEventListener('click', function(ev){ if(nDrop.style.display==='block' && !nDrop.contains(ev.target) && !nBell.contains(ev.target)) nDrop.style.display='none'; });
+}
+
+// TEACHER profile (note new id: profile-trigger-teacher)
+const tLogo = document.getElementById('profile-logo-teacher');
+const tTrigger = document.getElementById('profile-trigger-teacher');
+const tDrop = document.getElementById('profile-dropdown-teacher');
+setupToggle(tTrigger, tLogo, tDrop);
+
+// TEACHER notifications
+const tBell = document.getElementById('notif-bell-teacher');
+const tNotiDrop = document.getElementById('notifications-dropdown-teacher');
+if (tBell && tNotiDrop) {
+    tBell.addEventListener('click', function(e){ e.stopPropagation(); tNotiDrop.style.display = (tNotiDrop.style.display === 'block') ? 'none' : 'block'; });
+    document.addEventListener('click', function(ev){ if(tNotiDrop.style.display==='block' && !tNotiDrop.contains(ev.target) && !tBell.contains(ev.target)) tNotiDrop.style.display='none'; });
+}
+
+// Optional: ensure dropdowns appear above everything
+[document.getElementById('profile-dropdown'), document.getElementById('notifications-dropdown'),
+ document.getElementById('profile-dropdown-teacher'), document.getElementById('notifications-dropdown-teacher')].forEach(function(el){
+    if(el) el.style.zIndex = 2000;
+});
+</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

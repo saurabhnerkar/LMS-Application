@@ -1,0 +1,343 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+
+/* =========================================================
+   SIDEBAR + MAIN LAYOUT (Desktop)
+========================================================= */
+#main-content {
+    margin-left: 260px;          /* keep space for sidebar */
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.sidebar {
+    width: 250px !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background: white;
+    z-index: 2000;
+}
+
+/* Align Go Back button */
+.go-back-btn {
+    margin-left: 12px !important;
+    margin-top: 10px;
+}
+
+
+/* =========================================================
+   CARDS & TABLES
+========================================================= */
+.card {
+    border-radius: 10px;
+    border: none;
+}
+
+.card-header h4,
+.card-title {
+    font-weight: 600;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+.table img {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
+@media (max-width: 991px) {
+
+    #main-content {
+        margin-left: 0 !important;  /* MAIN CONTENT full width */
+        padding: 15px;
+    }
+
+    .sidebar {
+        left: -260px;               /* HIDE SIDEBAR */
+        transition: 0.3s ease;
+    }
+
+    .sidebar.active {
+        left: 0;                   /* SHOW SIDEBAR when toggled */
+    }
+
+    .go-back-btn {
+        margin-left: 0 !important;
+    }
+
+    /* Cards */
+    .card {
+        margin-bottom: 15px;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
+@media (max-width: 576px) {
+
+    h4 {
+        font-size: 1.2rem;
+    }
+
+    #main-content {
+        padding: 12px;
+    }
+
+    .go-back-btn {
+        width: 100%;
+        margin-left: 0 !important;
+        margin-top: 12px;
+    }
+
+    /* Stack statistics cards */
+    .row .col-md-4 {
+        margin-bottom: 15px;
+    }
+
+    /* Smaller text */
+    .card-header h4 {
+        font-size: 1.1rem;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    /* Table scroll */
+    .table-responsive {
+        border-radius: 10px;
+        overflow-x: auto;
+    }
+
+    /* Tabs responsive */
+    .nav-tabs .nav-link {
+        width: 100%;
+        margin-bottom: 5px;
+        text-align: center;
+    }
+
+    /* Buttons full width */
+    .btn {
+        width: 100%;
+        margin-top: 8px;
+    }
+}
+
+
+/* =========================================================
+   OPTIONAL — Hide footer for this page
+========================================================= */
+footer {
+    display: none;
+}
+
+</style>
+
+{% include 'teacher/_sidebar.html' %}
+<div class="div1" style="margin-left:200px; padding:35px; background:#f4f8fb; min-height:100vh;">
+  <!-- Go Back -->
+     <a href="javascript:history.back()" class="btn btn-outline-danger go-back-btn" >
+    <i class="fas fa-arrow-left"></i> Go Back
+  </a>
+
+<div class="container mt-5">
+  <!-- Breadcrumb removed -->
+  
+  <!-- Assignment Details Card -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">{{ assignment.title }}</h4>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-8">
+          <p class="text-muted mb-3">{{ assignment.instructions }}</p>
+          {% if assignment.upload_file %}
+            <a href="{{ assignment.upload_file.url }}" class="btn btn-outline-primary btn-sm" target="_blank">
+              <i class="fa-solid fa-download me-2"></i>Download Assignment File
+            </a>
+          {% endif %}
+        </div>
+        <div class="col-md-4 border-start">
+          <div class="d-flex align-items-center mb-3">
+            <i class="fa-solid fa-calendar text-primary me-2"></i>
+            <span><strong>Due Date:</strong> {{ assignment.due_date|date:"M d, Y" }}</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <i class="fa-solid fa-users text-primary me-2"></i>
+            <span><strong>Total Students:</strong> {{ total_students }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submission Statistics -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card bg-success text-white shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fa-solid fa-check-circle me-2"></i>Submitted
+          </h5>
+          <h3 class="mb-0">{{ submitted_students.count }}</h3>
+          <small>{{ submission_percentage|floatformat:1 }}% of total students</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-warning text-dark shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fa-solid fa-clock me-2"></i>Pending
+          </h5>
+          <h3 class="mb-0">{{ not_submitted_students|length }}</h3>
+          <small>{{ pending_percentage|floatformat:1 }}% of total students</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-info text-white shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fa-solid fa-users me-2"></i>Total Students
+          </h5>
+          <h3 class="mb-0">{{ total_students }}</h3>
+          <small>Enrolled in this course</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs for Submitted/Not Submitted Students -->
+  <ul class="nav nav-tabs mb-4" id="submissionTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="submitted-tab" data-bs-toggle="tab" data-bs-target="#submitted" type="button">
+        Submitted ({{ submitted_students.count }})
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="not-submitted-tab" data-bs-toggle="tab" data-bs-target="#not-submitted" type="button">
+        Not Submitted ({{ not_submitted_students|length }})
+      </button>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="submissionTabsContent">
+    <!-- Submitted Students -->
+    <div class="tab-pane fade show active" id="submitted" role="tabpanel">
+      {% if submitted_students %}
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>Student Name</th>
+                <th>Submission Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in submitted_info %}
+                {% with student=item.student submission=item.submission %}
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      {% if student.profile_picture %}
+                        <img src="{{ student.profile_picture.url }}" class="rounded-circle me-2" width="32" height="32">
+                      {% else %}
+                        <i class="fa-solid fa-user-circle me-2 text-secondary" style="font-size: 32px;"></i>
+                      {% endif %}
+                      {{ item.student.user.first_name }} {{ item.student.user.last_name }}
+                    </div>
+                  </td>
+                  <td>
+                      {% if submission %}
+                        {{ submission.submitted_on|date:"M d, Y H:i" }}
+                      {% else %}
+                        -
+                      {% endif %}
+                  </td>
+                  <td><span class="badge bg-success">Submitted</span></td>
+                  <td>
+  <a href="{{ submission.file.url }}" target="_blank" class="btn btn-outline-success btn-sm">
+    <i class="fa-solid fa-eye"></i> View
+  </a>
+  <a href="{% url 'teacher:grade_submission' submission.id %}" class="btn btn-outline-primary btn-sm ms-1">
+    <i class="fa-solid fa-pen"></i> Grade
+  </a>
+</td>
+
+                </tr>
+                {% endwith %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="alert alert-info">
+          <i class="fa-solid fa-info-circle me-2"></i>No submissions yet.
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Not Submitted Students -->
+    <div class="tab-pane fade" id="not-submitted" role="tabpanel">
+      {% if not_submitted_students %}
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>Student Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for student in not_submitted_students %}
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      {% if student.profile_picture %}
+                        <img src="{{ student.profile_picture.url }}" class="rounded-circle me-2" width="32" height="32">
+                      {% else %}
+                        <i class="fa-solid fa-user-circle me-2 text-secondary" style="font-size: 32px;"></i>
+                      {% endif %}
+                      {{ student.user.first_name }} {{ student.user.last_name }}
+                    </div>
+                  </td>
+                  <td>{{ student.user.email }}</td>
+                  <td><span class="badge bg-warning text-dark">Pending</span></td>
+                  <td>
+                    <button class="btn btn-outline-warning btn-sm">Send Reminder</button>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="alert alert-success">
+          <i class="fa-solid fa-check-circle me-2"></i>All students have submitted their assignments!
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-4">
+
+    <h3 class="mb-4 fw-bold">Give Feedback</h3>
+
+    {% if enrollments %}
+    <div class="row g-4">
+        {% for e in enrollments %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0 rounded-3 h-100">
+
+                {% if e.course.image %}
+                <img src="{{ e.course.image.url }}" class="card-img-top"
+                     style="height:180px; object-fit:cover;">
+                {% else %}
+                <img src="https://via.placeholder.com/500x300?text=Course+Image"
+                     class="card-img-top" style="height:180px; object-fit:cover;">
+                {% endif %}
+
+                <div class="card-body">
+                    <h5 class="card-title fw-semibold">{{ e.course.title }}</h5>
+
+                    <p class="text-muted mb-1" style="font-size:14px;">
+                        <strong>Teacher:</strong> {{ e.course.teacher.user.first_name }} {{ e.course.teacher.user.last_name }}
+                    </p>
+
+                    <div class="d-grid mt-3">
+                        <a href="{% url 'student:feedback_create' e.course.id %}"
+                           class="btn btn-primary btn-sm py-2">
+                            ⭐ Give Feedback
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center mt-4">
+        No courses available for feedback.
+    </div>
+    {% endif %}
+
+    <!-- Divider -->
+    <hr class="my-5">
+
+    <!-- Previous Feedback Section -->
+    <h3 class="mb-4 fw-bold">Your Previous Feedback</h3>
+
+    {% if old_feedbacks %}
+        {% for fb in old_feedbacks %}
+        <div class="card shadow-sm border-0 rounded-3 mb-4">
+            <div class="card-body">
+
+                <h5 class="card-title fw-semibold">{{ fb.course.title }}</h5>
+
+                <!-- Relevance -->
+                <p class="mt-3"><strong>Relevance of Training Content:</strong><br>
+                {% for i in "12345" %}
+                    {% if forloop.counter <= fb.relevance_rating %}
+                        <span style="color: gold;">&#9733;</span>
+                    {% else %}
+                        <span style="color: lightgray;">&#9733;</span>
+                    {% endif %}
+                {% endfor %}
+                </p>
+
+                <p><strong>Material Easy?</strong> {{ fb.material_easy }}</p>
+
+                <!-- Trainer Knowledge -->
+                <p><strong>Trainer Knowledge:</strong><br>
+                {% for i in "12345" %}
+                    {% if forloop.counter <= fb.trainer_knowledge_rating %}
+                        <span style="color: gold;">&#9733;</span>
+                    {% else %}
+                        <span style="color: lightgray;">&#9733;</span>
+                    {% endif %}
+                {% endfor %}
+                </p>
+
+                <p><strong>Duration Appropriate:</strong> {{ fb.duration_appropriate }}</p>
+                <p><strong>Achieved Objectives:</strong> {{ fb.achieved_objective }}</p>
+                <p><strong>Recommend Trainer:</strong> {{ fb.recommend_trainer }}</p>
+
+                <!-- Overall -->
+                <p><strong>Overall Satisfaction:</strong><br>
+                {% for i in "12345" %}
+                    {% if forloop.counter <= fb.overall_satisfaction_rating %}
+                        <span style="color: gold;">&#9733;</span>
+                    {% else %}
+                        <span style="color: lightgray;">&#9733;</span>
+                    {% endif %}
+                {% endfor %}
+                </p>
+
+                <p><strong>Suggestions:</strong><br>
+                    {{ fb.improvement_suggestions|default:"No suggestions provided." }}
+                </p>
+
+                <a href="{% url 'student:feedback_update' fb.id %}" class="btn btn-warning btn-sm mt-2">
+                    ✏ Edit Feedback
+                </a>
+
+            </div>
+        </div>
+        {% endfor %}
+
+    {% else %}
+    <p class="text-muted">You have not submitted any feedback yet.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

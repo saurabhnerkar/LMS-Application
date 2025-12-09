@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <h3>Your Submitted Feedback</h3>
+
+    {% for fb in feedbacks %}
+    <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+
+            <h5 class="card-title">{{ fb.course.title }}</h5>
+
+            <p><strong>1. Relevance:</strong><br>
+                {% for i in "12345" %}
+                    {% if forloop.counter <= fb.relevance_rating %}
+                        <span style="color: gold; font-size: 20px;">&#9733;</span>
+                    {% else %}
+                        <span style="color: #ccc; font-size: 20px;">&#9733;</span>
+                    {% endif %}
+                {% endfor %}
+            </p>
+
+            <p><strong>2. Material Easy?:</strong> {{ fb.material_easy }}</p>
+
+            <p><strong>3. Trainer Knowledge:</strong><br>
+                {% for i in "12345" %}
+                    {% if forloop.counter <= fb.trainer_knowledge_rating %}
+                        <span style="color: gold; font-size: 20px;">&#9733;</span>
+                    {% else %}
+                        <span style="color: #ccc; font-size: 20px;">&#9733;</span>
+                    {% endif %}
+                {% endfor %}
+            </p>
+
+            <p><strong>4. Duration Appropriate:</strong> {{ fb.duration_appropriate }}</p>
+            <p><strong>5. Achieved Objectives:</strong> {{ fb.achieved_objective }}</p>
+            <p><strong>6. Recommend Trainer:</strong> {{ fb.recommend_trainer }}</p>
+
+            <p><strong>7. Overall Satisfaction:</strong><br>
+                {% for i in "12345" %}
+                    {% if forloop.counter <= fb.overall_satisfaction_rating %}
+                        <span style="color: gold; font-size: 20px;">&#9733;</span>
+                    {% else %}
+                        <span style="color: #ccc; font-size: 20px;">&#9733;</span>
+                    {% endif %}
+                {% endfor %}
+            </p>
+
+            <p><strong>8. Improvement Suggestions:</strong><br>
+                {{ fb.improvement_suggestions|default:"No suggestions provided." }}
+            </p>
+
+            <hr>
+            <small class="text-muted">Submitted: {{ fb.created_at|date:"d M Y, H:i" }}</small>
+
+        </div>
+    </div>
+    <div class="card-body">
+    <a href="{% url 'student:feedback_update' fb.id %}" class="btn btn-warning btn-sm">
+        Update
+    </a>
+    {% empty %}
+    <p>No feedback submitted yet.</p>
+    
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Confirm Enrollment</h2>
+   <form method="post">{% csrf_token %}
+      <p>Are you sure you want to enroll in {{ course.title }}?</p>
+      <button type="submit" class="btn btn-success">Confirm Enrollment</button>
+      <a href="{% url 'student:course_list' %}" class="btn btn-secondary">Cancel</a>
+   </form>
+
+{% endblock %}
+

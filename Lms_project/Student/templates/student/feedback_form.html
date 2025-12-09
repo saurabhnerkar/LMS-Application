@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <h3 class="mb-3">Training Feedback Form</h3>
+
+    <p><strong>Course:</strong> {{ course.title }}</p>
+    <p><strong>Teacher:</strong> {{ course.teacher.user.first_name}} {{ course.teacher.user.last_name}}  </p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- 1. Relevance -->
+        <div class="mb-4 p-3 border rounded">
+            <label><strong>1. Relevance of training content</strong></label>
+            <div class="star-container mt-2">
+                {% for i in "12345" %}
+                <span class="star" data-input="relevance_rating" data-value="{{ forloop.counter }}">&#9733;</span>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="relevance_rating" id="relevance_rating">
+        </div>
+
+        <!-- 2. Material easy? -->
+        <div class="mb-4 p-3 border rounded">
+            <label><strong>2. Was the material easy to understand?</strong></label><br>
+            <label><input type="radio" name="material_easy" value="Yes"> Yes</label><br>
+            <label><input type="radio" name="material_easy" value="No"> No</label><br>
+            <label><input type="radio" name="material_easy" value="Somewhat"> Somewhat</label>
+        </div>
+
+        <!-- 3. Trainer knowledge -->
+        <div class="mb-4 p-3 border rounded">
+            <label><strong>3. Trainer knowledge</strong></label>
+            <div class="star-container mt-2">
+                {% for i in "12345" %}
+                <span class="star" data-input="trainer_knowledge_rating" data-value="{{ forloop.counter }}">&#9733;</span>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="trainer_knowledge_rating" id="trainer_knowledge_rating">
+        </div>
+
+        <!-- 4. Duration appropriate -->
+        <div class="mb-4 p-3 border rounded">
+            <label><strong>4. Was the duration appropriate?</strong></label><br>
+            <label><input type="radio" name="duration_appropriate" value="Strongly Disagree"> Strongly Disagree</label><br>
+            <label><input type="radio" name="duration_appropriate" value="Disagree"> Disagree</label><br>
+            <label><input type="radio" name="duration_appropriate" value="Neutral"> Neutral</label><br>
+            <label><input type="radio" name="duration_appropriate" value="Agree"> Agree</label><br>
+            <label><input type="radio" name="duration_appropriate" value="Strongly Agree"> Strongly Agree</label>
+        </div>
+
+        <!-- 5. Achieved objectives -->
+        <div class="mb-4 p-3 border rounded">
+            <label><strong>5. Did you achieve the objectives?</strong></label><br>
+            <label><input type="radio" name="achieved_objective" value="Yes"> Yes</label><br>
+            <label><input type="radio" name="achieved_objective" value="No"> No</label><br>
+            <label><input type="radio" name="achieved_objective" value="Maybe"> Maybe</label>
+        </div>
+
+        <!-- 6. Recommend trainer -->
+        <div class="mb-4 p-3 border rounded">
+            <label><strong>6. Will you recommend the trainer?</strong></label><br>
+            <label><input type="radio" name="recommend_trainer" value="Yes"> Yes</label><br>
+            <label><input type="radio" name="recommend_trainer" value="No"> No</label><br>
+            <label><input type="radio" name="recommend_trainer" value="Somehow"> Somehow</label>
+        </div>
+
+        <!-- 7. Overall satisfaction -->
+        <div class="mb-4 p-3 border rounded">
+            <label><strong>7. Overall satisfaction</strong></label>
+            <div class="star-container mt-2">
+                {% for i in "12345" %}
+                <span class="star" data-input="overall_satisfaction_rating" data-value="{{ forloop.counter }}">&#9733;</span>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="overall_satisfaction_rating" id="overall_satisfaction_rating">
+        </div>
+
+        <!-- 8. Suggestions -->
+        <div class="mb-4 p-3 border rounded">
+            <label><strong>8. Suggestions for improvement</strong></label>
+            <textarea name="improvement_suggestions" class="form-control"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit Feedback</button>
+    </form>
+</div>
+
+<style>
+    .star {
+        font-size: 28px;
+        cursor: pointer;
+        color: #ccc;
+        margin-right: 5px;
+    }
+    .star.selected {
+        color: gold;
+    }
+</style>
+
+<script>
+    const stars = document.querySelectorAll(".star");
+
+    stars.forEach(star => {
+        star.addEventListener("click", function() {
+            let value = this.getAttribute("data-value");
+            let inputName = this.getAttribute("data-input");
+
+            document.getElementById(inputName).value = value;
+
+            let group = document.querySelectorAll(`.star[data-input="${inputName}"]`);
+            group.forEach(s => s.classList.remove("selected"));
+
+            for (let i = 0; i < value; i++) {
+                group[i].classList.add("selected");
+            }
+        });
+    });
+</script>
+
+{% endblock %}

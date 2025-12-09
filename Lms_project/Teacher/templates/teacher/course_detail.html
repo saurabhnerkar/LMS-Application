@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+{% block title %}{{ course.title }} - Details{% endblock %}
+{% include static %}
+{% block content %}
+<style>
+  /* Sidebar styling (kept minimal; your existing sidebar file will provide its own styles) */
+  #sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 55px;
+    left: 0;
+    background: #fff;
+    border-right: 1px solid #dee2e6;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+  }
+
+  #sidebar a {
+    display: block;
+    padding: 10px 20px;
+    color: #333;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  #sidebar a:hover,
+  #sidebar a.active {
+    background-color: #f0fdf4;
+    color: #198754;
+  }
+
+  /* Main content area */
+  #main-content {
+    margin-left: 250px;
+    padding: 30px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    transition: all 0.3s ease;
+  }
+
+  /* Attendance card center */
+  .attendance-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  .attendance-card {
+    width: 360px; /* adjust width as needed */
+    max-width: 90%;
+  }
+
+  /* Two cards per row */
+  .two-column-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    align-items: start;
+  }
+
+  /* Ensure card bodies stretch to same height */
+  .two-column-cards .card {
+    display: flex;
+    flex-direction: column;
+  }
+  .two-column-cards .card .card-body {
+    flex: 1 1 auto;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 992px) {
+    #main-content {
+      margin-left: 200px;
+      padding: 20px;
+    }
+  }
+  @media (max-width: 768px) {
+    #main-content {
+      margin-left: 0 !important;
+      padding: 15px;
+    }
+    .two-column-cards {
+      grid-template-columns: 1fr;
+    }
+    .attendance-card {
+      width: 100%;
+    }
+  }
+
+  footer { display: none; }
+</style>
+
+{% include 'teacher/_sidebar.html' %}
+
+<div class="div1" style="margin-left:200px; padding:35px; background:#f4f8fb; min-height:100vh;">
+
+  <a href="javascript:history.back()" class="btn btn-outline-danger mb-3">
+    <i class="fas fa-arrow-left"></i> Go Back
+  </a>
+
+  <div class="container-fluid">
+
+    <!-- Header -->
+    <div class="text-center mb-5">
+      <h2 class="fw-bold text-dark">
+        <i class="fa-solid fa-graduation-cap me-2"></i>{{ course.title }}
+      </h2>
+    </div>
+
+    <!-- Course Info Card -->
+    <div class="card shadow-sm border-0 mb-5">
+  <div class="row g-0">
+    <div class="col-md-4">
+      {% load static %}
+      {% if course.image %}
+        <img src="{{ course.image.url }}" class="img-fluid rounded-start h-100" alt="{{ course.title }}" style="object-fit: cover;">
+      {% else %}
+        <img src="{% static 'images/default_course.jpg' %}" class="img-fluid rounded-start h-100" alt="Default Image" style="object-fit: cover;">
+      {% endif %}
+    </div>
+
+    <div class="col-md-8">
+      <div class="card-body">
+        <p class="text-muted">{{ course.description }}</p>
+        <p><i class="fa-solid fa-users me-2"></i><strong>Enrolled Students:</strong> {{ student_count }}</p>
+        <p><i class="fa-solid fa-chalkboard-user me-2"></i><strong>Instructor:</strong> {{ course.teacher.full_name }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <!-- Attendance card centered -->
+    <div class="attendance-wrapper">
+      <div class="card shadow-sm border-0 text-center p-3 attendance-card">
+        <div class="card-body">
+          <i class="fa-solid fa-clipboard-check fa-2x text-success mb-3"></i>
+          <h5 class="card-title">Fill Attendance</h5>
+          <p class="card-text text-muted">Mark student attendance for this course.</p>
+
+          <a href="https://docs.google.com/spreadsheets/d/1dStptb05yi9sCDiYpmwkXBylQaepy-i0gZGU3DiOQHQ/edit?usp=sharing"
+             class="btn btn-success w-100">
+            <i class="fa-solid fa-check me-1"></i> Fill Attendance
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Remaining cards in 2 columns -->
+    <div class="two-column-cards">
+
+      <!-- Add Notes -->
+      <div class="card shadow-sm border-0 text-center p-3">
+        <div class="card-body">
+          <i class="fa-solid fa-note-sticky fa-2x text-primary mb-3"></i>
+          <h5 class="card-title">Add Notes</h5>
+          <p class="card-text text-muted">Upload or write lecture notes for students.</p>
+          <a href="{% url 'teacher:add_note' course.id %}" class="btn btn-primary w-100">
+            <i class="fa-solid fa-plus me-1"></i> Add Notes
+          </a>
+        </div>
+      </div>
+
+      <!-- View Notes -->
+      <div class="card shadow-sm border-0 text-center p-3">
+        <div class="card-body">
+          <i class="fa-solid fa-book-open fa-2x text-primary mb-3"></i>
+          <h5 class="card-title">View Notes</h5>
+          <p class="card-text text-muted">Check uploaded notes for this course.</p>
+          <a href="{% url 'teacher:course_notes' course.id %}" class="btn btn-primary text-white w-100">
+            <i class="fa-solid fa-eye me-1"></i> View Notes
+          </a>
+        </div>
+      </div>
+
+      <!-- Add Assignment -->
+      <div class="card shadow-sm border-0 text-center p-3">
+        <div class="card-body">
+          <i class="fa-solid fa-file-circle-plus fa-2x text-info mb-3"></i>
+          <h5 class="card-title">Add Assignment</h5>
+          <p class="card-text text-muted">Create and assign new coursework.</p>
+          <a href="{% url 'teacher:add_assignment' course.id %}" class="btn btn-info w-100 text-light">
+            <i class="fa-solid fa-plus me-1"></i> Add Assignment
+          </a>
+        </div>
+      </div>
+
+      <!-- View Assignments -->
+      <div class="card shadow-sm border-0 text-center p-3">
+        <div class="card-body">
+          <i class="fa-solid fa-folder-open fa-2x text-info mb-3"></i>
+          <h5 class="card-title">View Assignments</h5>
+          <p class="card-text text-muted">Manage assignments and track submissions.</p>
+          <a href="{% url 'teacher:course_assignments_list' course.id %}" class="btn btn-info w-100">
+            <i class="fa-solid fa-tasks me-1"></i> View Assignments
+          </a>
+        </div>
+      </div>
+
+      <!-- Add Quiz -->
+      <div class="card shadow-sm border-0 text-center p-3">
+        <div class="card-body">
+          <i class="fa-solid fa-circle-plus fa-2x text-warning mb-3"></i>
+          <h5 class="card-title">Add Quiz</h5>
+          <p class="card-text text-muted">Create a new quiz for this course.</p>
+          <a href="{% url 'teacher:add_quiz' course.id %}" class="btn btn-warning w-100 text-dark">
+            <i class="fa-solid fa-plus me-1"></i> Add Quiz
+          </a>
+        </div>
+      </div>
+
+      <!-- View Quizzes -->
+      <div class="card shadow-sm border-0 text-center p-3">
+        <div class="card-body">
+          <i class="fa-solid fa-question-circle fa-2x text-warning mb-3"></i>
+          <h5 class="card-title">View Quizzes</h5>
+          <p class="card-text text-muted">See all quizzes created for this course.</p>
+          <a href="{% url 'teacher:course_quizzes' course.id %}" class="btn btn-warning text-dark w-100">
+            <i class="fa-solid fa-eye me-1"></i> View Quizzes
+          </a>
+        </div>
+      </div>
+
+    </div> <!-- .two-column-cards -->
+
+  </div> <!-- .container-fluid -->
+</div> <!-- #main-content -->
+
+{% endblock %}

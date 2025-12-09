@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+{% load static %}
+{% comment %} {% comment %} 
+{% block content %}
+{% include 'student/_sidebar.html' %}
+<style>
+.main_div {
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+    background-color: #f9fafb;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+main.main {
+    flex: 1 1 auto;
+    min-width: 0;
+    box-sizing: border-box;
+    padding-left: 130px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .main_div {
+        flex-direction: column;
+        padding: 10px 5px;
+    }
+    main {
+        padding: 15px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .course-row {
+        display: block;
+    }
+}
+
+footer {
+    z-index: 5000;
+}
+</style>
+
+{% comment %} <main class="main"> {% endcomment %}
+{% comment %} <div class="main-content" style="margin-left:200px; padding:35px; min-height:100vh;">
+    <!-- My Courses -->
+    <div>
+        <h2 style="font-weight: 700; margin-bottom: 18px; text-align: center;">My Courses</h2>
+        {% if my_courses %}
+            <div class="row g-4 course-row">
+                {% for course in my_courses %}
+                    <div class="col-lg-6 col-md-6 col-sm-12 mb-3">
+                        <div class="card shadow-sm border-0 h-100" style="border-radius: 15px;">
+                            
+                            <!-- Image at the top -->
+                            {% if course.image %}
+                                <div class="ratio ratio-16x9">
+                                    <img src="{{ course.image.url }}" class="card-img-top" alt="{{ course.title }}" style="object-fit: cover;">
+                                </div>
+                            {% else %}
+                                <div class="ratio ratio-16x9 bg-light d-flex align-items-center justify-content-center">
+                                    <img src="{% static 'images/default_course.jpg' %}" alt="No Image" style="object-fit: cover; width: 100%; height: 100%;">
+                                </div>
+                            {% endif %}
+
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title text-dark">{{ course.title }}</h5>
+                                <p class="card-text text-secondary mb-2">
+                                    Enrolled On: <span style="font-weight: 500;">{{ course.enrolled_on|date:"d M Y" }}</span>
+                                </p>
+                                <div class="mt-auto">
+                                    <a href="{% url 'student:course_detail' course.id %}" class="btn btn-primary w-100">
+                                        View Course
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="font-size: 15px; color: #777;">You have not enrolled in any courses yet.</p>
+        {% endif %}
+    </div>
+</div>
+</main>
+
+<!-- Sidebar JS -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const sidebar = document.getElementById("sidebar");
+    const toggleBtn = document.getElementById("sidebarToggle");
+    const overlay = document.getElementById("sidebarOverlay");
+
+    if(toggleBtn){
+        toggleBtn.addEventListener("click", () => {
+            sidebar.classList.add("active");
+            overlay.classList.add("active");
+        });
+    }
+    if(overlay){
+        overlay.addEventListener("click", () => {
+            sidebar.classList.remove("active");
+            overlay.classList.remove("active");
+        });
+    }
+});
+</script>
+
+{% endblock %} {% endcomment %} 
+
+{% block content %}
+{% include 'student/_sidebar.html' %}
+
+<!-- Make sure base.html includes Bootstrap 5 CSS & JS (CDN or local) -->
+<style>
+/* Dashboard layout & look */
+.dashboard-wrapper {
+  margin-left: 200px; /* match your sidebar width */
+  padding: 28px;
+  min-height: 100vh;
+  background-color: #f6f8fa;
+  box-sizing: border-box;
+}
+
+/* Header */
+.db-header {
+  background: #fff;
+  border-radius: 12px;
+  padding: 22px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow: 0 6px 18px rgba(20,20,40,0.04);
+  margin-bottom: 18px;
+}
+
+.db-welcome { font-weight:700; font-size:22px; display:flex; gap:12px; align-items:center; }
+.db-institute { text-align:right; color:#333; }
+.db-institute h4 { margin:0; font-weight:700; letter-spacing:1px; }
+.db-institute small { color:#8b8f98; }
+
+/* Stat cards */
+.stat-row .card { border-radius:12px; box-shadow: 0 4px 12px rgba(20,20,40,0.04); }
+.stat-value { font-size:36px; font-weight:700; color:#111; }
+.stat-sub { color:#0dbfa7; font-weight:600; }
+
+/* Main panels */
+.panel {
+  border-radius:12px;
+  background:#fff;
+  box-shadow: 0 6px 18px rgba(20,20,40,0.04);
+  padding:18px;
+}
+
+/* Course list - progress */
+.course-item { display:flex; gap:16px; align-items:center; padding:12px 0; border-bottom:1px solid #f0f2f4; }
+.course-thumb { width:72px; height:72px; border-radius:8px; overflow:hidden; flex:0 0 72px; }
+.course-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+.course-info { flex:1; }
+.course-progress { height:8px; background:#f2f3f5; border-radius:6px; overflow:hidden; margin-top:8px; }
+.course-progress > i { display:block; height:100%; width:60%; background:linear-gradient(90deg,#ff8b7d,#ff6b8a); }
+
+/* Upcoming classes list */
+.upcoming-item { padding:14px 0; border-bottom:1px solid #f0f2f4; display:flex; gap:12px; align-items:flex-start; }
+.upcoming-bullet { width:10px; height:10px; border-radius:50%; margin-top:8px; }
+.upcoming-time { color:#6b6f78; font-size:14px; }
+
+/* Notifications */
+.no-notif { color:#8a8d92; }
+
+/* Responsive tweaks */
+@media (max-width: 991px) {
+  .dashboard-wrapper { margin-left: 0; padding:18px; }
+}
+</style>
+
+<div class="main-content" style="margin-left:200px; padding:35px; background:#f4f8fb; min-height:100vh;">
+  <!-- Header -->
+  <div class="db-header">
+    <div class="db-welcome">
+      <span style="font-size:26px;">👋</span>
+      <div>
+        <div style="font-size:20px;">Welcome, {{ user.get_full_name|default:"Student" }}</div>
+        <small style="color:#7b8090;">Have a great learning day</small>
+      </div>
+    </div>
+
+    <div class="db-institute">
+      <small>Institute Name</small>
+      <h4>ITPRENEUR</h4>
+    </div>
+  </div>
+
+  <!-- Stats row -->
+  <div class="row g-3 stat-row mb-3">
+    <div class="col-lg-3 col-md-6">
+      <div class="card p-3 panel">
+        <div class="small text-muted">Total Courses</div>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="stat-value">0/{{ enrolled_courses }}</div>
+          <div class="stat-sub">Completed /<br>Enrolled</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="card p-3 panel">
+        <div class="small text-muted">Total Score</div>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="stat-value">0/0</div>
+          <div class="text-danger">0 AVG</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="card p-3 panel">
+        <div class="small text-muted">Total Attendance</div>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="stat-value">0</div>
+          <div class="stat-sub">Hours</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="card p-3 panel">
+        <div class="small text-muted">Late Entries</div>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="stat-value">0/156</div>
+          <div class="stat-sub">Till Date</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Single full-width card -->
+<div class="row g-3">
+
+  <div class="col-lg-12">   <!-- changed from col-lg-4 -->
+    <div class="panel">
+      <h5 class="mb-3" style="font-weight:700;">My Courses</h5>
+
+      {% if my_courses %}
+        {% for c in my_courses %}
+          <div class="course-item" style="width:100%;"> <!-- ensure full width -->
+
+            <div class="course-thumb">
+              {% if c.image %}
+                <img src="{{ c.image.url }}" alt="{{ c.title }}">
+              {% else %}
+                <img src="/mnt/data/Screenshot 2025-11-21 120100.png" alt="{{ c.title }}">
+              {% endif %}
+            </div>
+
+            <div class="course-info">
+              <div style="font-weight:600;">{{ c.title }}</div>
+              <div style="font-size:13px;color:#7b8088;">{{ c.subtitle|default:"" }}</div>
+
+              <div class="course-progress">
+                <i style="width: {{ c.progress|default_if_none:'60' }}%;"></i>
+              </div>
+            </div>
+
+            <div style="min-width:40px; text-align:right; color:#444;">
+              {{ c.progress|default_if_none:"60" }}
+            </div>
+
+            <div style="margin-top:14px;">
+              <a href="{% url 'student:course_detail' c.id %}"
+                 style="background:#007bff; color:#fff; padding:8px 14px; border-radius:6px; font-size:14px; text-decoration:none;">
+                View Course
+              </a>
+            </div>
+
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-muted">You have not enrolled in any courses yet.</p>
+      {% endif %}
+
+    </div>
+  </div>
+
+</div>
+
+
+<!-- Small script: toggle sidebar (your previous logic) -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const sidebar = document.getElementById("sidebar");
+  const toggleBtn = document.getElementById("sidebarToggle");
+  const overlay = document.getElementById("sidebarOverlay");
+  if(toggleBtn) toggleBtn.addEventListener("click", () => {
+    sidebar.classList.add("active");
+    if(overlay) overlay.classList.add("active");
+  });
+  if(overlay) overlay.addEventListener("click", () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+ 
+{% include 'teacher/_sidebar.html' %}
+
+  
+<div id="main-content">
+  <!-- Go Back Button -->
+  <a href="javascript:history.back()" class="btn btn-outline-danger go-back-btn" style ="margin-left: 8.5em;">
+    <i class="fas fa-arrow-left"></i> Go Back
+  </a>
+ <div class="container mt-5">
+  <h2 class="mb-3">My Profile</h2>
+  <hr>
+
+  <div class="card p-4 shadow-sm">
+    <h4 class="text-primary mb-3">{{ teacher.full_name }}</h4>
+
+    <div class="row">
+      <div class="col-md-6">
+        <p><strong>Gender:</strong> {{ teacher.gender }}</p>
+        <p><strong>Mobile Number:</strong> {{ teacher.mobile_number }}</p>
+        <p><strong>Date of Birth:</strong> {{ teacher.date_of_birth }}</p>
+        <p><strong>Country:</strong> {{ teacher.country }}</p>
+        <p><strong>State:</strong> {{ teacher.state }}</p>
+        <p><strong>Address:</strong> {{ teacher.address }}</p>
+        <p><strong>Bio:</strong> {{ teacher.bio }}</p>
+      </div>
+
+      <div class="col-md-6">
+        <p><strong>Qualification Type:</strong> {{ teacher.qualification_type }}</p>
+        <p><strong>Institution Name:</strong> {{ teacher.institution_name }}</p>
+        <p><strong>Passing Year:</strong> {{ teacher.passing_year }}</p>
+        <p><strong>Currently Studying:</strong> {{ teacher.currently_studying }}</p>
+        <p><strong>Previous Workplace:</strong> {{ teacher.prev_workplace }}</p>
+        <p><strong>Designation:</strong> {{ teacher.designation }}</p>
+        <p><strong>Start Date:</strong> {{ teacher.start_date }}</p>
+        <p><strong>End Date:</strong> {{ teacher.end_date }}</p>
+        <p><strong>Current Joining Date:</strong> {{ teacher.current_joining_date }}</p>
+        <p><strong>Experience:</strong> {{ teacher.experience }}</p>
+      </div>
+    </div>
+
+    <hr>
+    <div>
+      <p><strong>Portfolio:</strong> 
+        {% if teacher.portfolio_link %}
+          <a href="{{ teacher.portfolio_link }}" target="_blank">{{ teacher.portfolio_link }}</a>
+        {% else %}
+          N/A
+        {% endif %}
+      </p>
+      <p><strong>GitHub:</strong> 
+        {% if teacher.github_link %}
+          <a href="{{ teacher.github_link }}" target="_blank">{{ teacher.github_link }}</a>
+        {% else %}
+          N/A
+        {% endif %}
+      </p>
+      <p><strong>LinkedIn:</strong> 
+        {% if teacher.linkedin_link %}
+          <a href="{{ teacher.linkedin_link }}" target="_blank">{{ teacher.linkedin_link }}</a>
+        {% else %}
+          N/A
+        {% endif %}
+      </p>
+    </div>
+
+    <a href="{% url 'teacher:update_profile' %}" class="btn btn-primary mt-3">Edit Profile</a>
+  </div>
+</div>
+  </div>
+{% endblock %}

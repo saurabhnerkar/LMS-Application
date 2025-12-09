@@ -1,0 +1,354 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  /* ============= MAIN CONTENT SPACING FIX ============= */
+#main-content {
+    margin-left: 250px;
+    padding: 20px;
+    transition: 0.3s;
+}
+.card-title{
+  background-color:  #214063ff;
+  color:white;
+  text-align: center;
+}
+.card-body{
+  border-radius: 10px;
+}
+
+@media (max-width: 992px) {
+    #main-content {
+        margin-left: 0 !important;
+        padding: 15px;
+    }
+}
+
+/* ============= SIDEBAR MOBILE FIX ============= */
+.sidebar {
+    width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 9999;
+}
+
+.sidebar-toggle-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 10000 !important;
+}
+
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    .sidebar.open {
+        transform: translateX(0);
+    }
+}
+
+/* ============= GO BACK BUTTON RESPONSIVE ============= */
+.go-back-btn {
+    margin-left: 0.4em;
+}
+
+@media (max-width: 576px) {
+    .go-back-btn {
+        margin-left: 0 !important;
+        display: block;
+        /* width: 50%; */
+        margin-bottom: 10px;
+        text-align: center;
+    }
+}
+
+/* ============= HEADER + BUTTON FIX ============= */
+.d-flex.justify-content-between {
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .d-flex.justify-content-between {
+        text-align: center !important;
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+
+/* ============= ASSIGNMENT CARDS RESPONSIVE ============= */
+@media (max-width: 768px) {
+    .col-md-4 {
+        width: 100%;
+    }
+}
+
+.card {
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+}
+
+/* Reduce padding for smaller screens */
+@media (max-width: 576px) {
+    .card-body {
+        padding: 12px !important;
+    }
+}
+
+/* ============= TEXT SIZE ADJUST ============= */
+@media (max-width: 576px) {
+    h2 {
+        font-size: 1.3rem !important;
+    }
+    h5.card-title {
+        font-size: 1.1rem;
+    }
+}
+
+/* ============= CONTAINER SPACING ============= */
+@media (max-width: 576px) {
+    .container {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+}
+
+
+
+/* ==== Mobile Sidebar Toggle Button ==== */
+#mobileSidebarToggle {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 9999;
+    padding: 10px 14px;
+    font-size: 20px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    display: none; /* hidden on desktop */
+    margin-top: 40px;        /* i  add */
+}
+
+/* Show toggle button only on mobile */
+@media (max-width: 768px) {
+    #mobileSidebarToggle {
+        display: block;
+    }
+
+    /* Sidebar initially hidden on mobile */
+    #sidebar {
+        transform: translateX(-100%);
+        transition: 0.3s ease-in-out;
+    }
+
+    #sidebar.mobile-active {
+        transform: translateX(0);
+    }
+}
+
+/* ==== Mobile Sidebar Toggle Button ==== */
+#mobileSidebarToggle {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 9999;
+    padding: 10px 14px;
+    font-size: 20px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    display: none; /* hidden on desktop */
+    margin-top: 40px;        /* i  add */
+}
+
+/* Show toggle button only on mobile */
+@media (max-width: 768px) {
+    #mobileSidebarToggle {
+        display: block;
+    }
+
+    /* Sidebar initially hidden on mobile */
+    #sidebar {
+        transform: translateX(-100%);
+        transition: 0.3s ease-in-out;
+    }
+
+    #sidebar.mobile-active {
+        transform: translateX(0);
+    }
+}
+
+/* ==== Mobile Sidebar Toggle Button ==== */
+#mobileSidebarToggle {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 9999;
+    padding: 10px 14px;
+    font-size: 20px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    display: none; /* hidden on desktop */
+    margin-top: 40px;        /* i  add */
+}
+
+/* Show toggle button only on mobile */
+@media (max-width: 768px) {
+    #mobileSidebarToggle {
+        display: block;
+    }
+
+    /* Sidebar initially hidden on mobile */
+    #sidebar {
+        transform: translateX(-100%);
+        transition: 0.3s ease-in-out;
+    }
+
+    #sidebar.mobile-active {
+        transform: translateX(0);
+    }
+}
+
+
+footer{
+  display: none;
+}
+</style>
+{% include 'teacher/_sidebar.html' %}
+
+  
+<div class="div1" style="margin-left:200px; padding:35px; background:#f4f8fb; min-height:100vh;">
+  <!-- Go Back Button -->
+  <a href="javascript:history.back()" class="btn btn-outline-danger go-back-btn">
+    <i class="fas fa-arrow-left"></i> Go Back
+  </a>
+
+  <div class="container mt-5">
+
+    <!-- Header: Notes centered, Add Note button on right -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+      <h2 class="mb-0 fw-bold text-center flex-grow-1" style="color: black;">
+        Notes
+      </h2>
+      
+      {% if course %}
+      <a href="{% url 'teacher:add_note' course.id %}" class="btn btn-success ms-3 mt-2 mt-md-0">
+        <i class="fa-solid fa-plus me-2"></i> Add Note
+      </a>
+      {% endif %}
+    </div>
+
+    <!-- Notes Cards -->
+    {% if notes %}
+      <div class="row">
+        {% for note in notes %}
+          <div class="col-md-4 mb-4">
+            <div class="card shadow-sm h-100 border-0">
+              <div class="card-body">
+                <h5 class="card-title mb-3">{{ note.title }}</h5>
+                {% if note.content %}
+                  <p class="card-text">{{ note.content|truncatewords:20 }}</p>
+                {% endif %}
+              </div>
+              <div class="card-footer bg-white border-0">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <a href="{% url 'teacher:view_note' note.id %}" class="btn btn-sm btn-outline-primary" title="View">
+                      <i class="fa-solid fa-eye"></i>
+                    </a>
+                    <a href="{% url 'teacher:edit_note' note.id %}" class="btn btn-sm btn-outline-secondary" title="Edit">
+                      <i class="fa-solid fa-edit"></i>
+                    </a>
+                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" 
+                            data-bs-target="#deleteModal{{ note.id }}" title="Delete">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </div>
+                  {% if note.upload_file %}
+                    <a href="{{ note.upload_file.url }}" class="btn btn-sm btn-outline-info" target="_blank" title="Download Attachment">
+                      <i class="fa-solid fa-download"></i>
+                    </a>
+                  {% endif %}
+                </div>
+                <small class="text-muted d-block mt-2">{{ note.created_on|date:"d M Y" }}</small>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="alert alert-secondary text-center mt-4">
+        {% if course %}
+          No notes uploaded for this course yet.
+        {% else %}
+          You haven't uploaded any notes yet.
+          <div class="mt-3">
+            <a href="{% url 'teacher:view_courses' %}" class="btn btn-primary">
+              <i class="fa-solid fa-book me-2"></i> Go to Your Courses
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+
+
+
+
+
+
+<script>
+  
+// Create mobile toggle button
+document.addEventListener("DOMContentLoaded", function () {
+
+    // 1. Create Button
+    const btn = document.createElement("button");
+    btn.id = "mobileSidebarToggle";
+    btn.innerHTML = "☰";
+
+    document.body.appendChild(btn);
+
+    const sidebar = document.getElementById("sidebar");
+
+    // 2. When clicking the button -> open sidebar
+    btn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        sidebar.classList.add("mobile-active");
+        btn.style.display = "none"; // hide button when sidebar is open
+    });
+
+    // 3. Click outside → close sidebar
+    document.addEventListener("click", function (e) {
+
+        // Only close when sidebar is open
+        if (sidebar.classList.contains("mobile-active")) {
+
+            // If click is NOT inside sidebar
+            if (!sidebar.contains(e.target)) {
+                sidebar.classList.remove("mobile-active");
+                btn.style.display = "block"; // show button again
+            }
+        }
+    });
+
+});
+
+
+</script>
+{% endblock %}

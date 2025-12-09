@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4 fw-bold text-center">Available Courses</h2>
+  <div class="row gy-4">
+    {% for course in courses %}
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <!-- Course Image (Admin uploads via Django Admin) -->
+        {% if course.image %}
+          <img src="{{ course.image.url }}" class="card-img-top" style="height:220px;object-fit:cover;" alt="{{ course.title }}">
+        {% else %}
+          <img src="https://www.svgrepo.com/show/303229/online-course-education.svg" class="card-img-top" style="height:220px;object-fit:cover;" alt="Default Course">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title text-primary">{{ course.title }}</h5>
+          <p class="card-text">{{ course.description|truncatechars:120 }}</p>
+          {% if course.more_info %}
+            <p class="card-text"><small>{{ course.more_info|truncatechars:90 }}</small></p>
+          {% endif %}
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center">
+          <span class="fw-bold text-success">₹{{ course.price }}</span>
+          <span class="text-muted small">Created: {{ course.created_at|date:"d M Y" }}</span>
+        </div>
+        <div class="card-footer bg-transparent d-flex justify-content-between">
+          <a href="{% url 'student:course_detail' course.pk %}" class="btn btn-outline-primary btn-sm">View_More</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <div class="alert alert-warning">No courses available right now.</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

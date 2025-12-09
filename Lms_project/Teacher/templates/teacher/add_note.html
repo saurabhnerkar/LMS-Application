@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load widget_tweaks form_tags %}
+{% block title %}Add Note{% endblock %}
+{% block content %}
+{% include 'teacher/_sidebar.html' %}
+
+<style>
+  .upload-card {
+    max-width: 600px;
+    margin: 60px auto;
+    background: #ffffff;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .upload-card h3 {
+    font-weight: 700;
+  }
+
+  .upload-card .card-header {
+    background: linear-gradient(90deg, #007bff, #00c6ff);
+    color: white;
+    border-radius: 15px 15px 0 0;
+  }
+
+  .form-control,
+  .form-select {
+    border-radius: 10px;
+  }
+
+  button[type="submit"] {
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  button[type="submit"]:hover {
+    transform: scale(1.02);
+    transition: all 0.2s ease;
+  }
+
+
+
+  /* ======================================================
+   RESPONSIVE ADD NOTE PAGE (NO HTML CHANGES REQUIRED)
+====================================================== */
+
+/* For tablets and medium screens */
+@media (max-width: 992px) {
+
+  #main-content {
+    margin-left: 220px !important;
+    padding: 20px;
+  }
+
+  .upload-card {
+    max-width: 90%;
+    margin-top: 40px;
+  }
+}
+
+/* For mobile screens */
+@media (max-width: 768px) {
+
+  /* Sidebar goes full width */
+  /* #sidebar {
+    width: 100% !important;
+    height: auto !important;
+    position: relative !important;
+    top: 0 !important;
+    border-right: none;
+    box-shadow: none;
+  } */
+
+  #main-content {
+    margin-left: 0 !important;
+    padding: 15px;
+  }
+
+  /* Upload Card full width */
+  .upload-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 30px auto !important;
+    border-radius: 12px;
+  }
+
+  /* Card heading */
+  .upload-card h3 {
+    font-size: 20px !important;
+  }
+
+  /* Form fields font size */
+  .form-control,
+  .form-select {
+    font-size: 15px !important;
+    padding: 10px 12px !important;
+  }
+
+  /* Buttons */
+  button[type="submit"],
+  .btn-secondary {
+    font-size: 15px !important;
+    padding: 10px !important;
+  }
+
+  .d-flex.gap-2 {
+    flex-direction: column !important;
+  }
+
+  .d-flex.gap-2 .btn {
+    width: 100% !important;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 480px) {
+
+  .upload-card h3 {
+    font-size: 18px !important;
+  }
+
+  .form-label {
+    font-size: 14px !important;
+  }
+
+  .form-control {
+    font-size: 14px !important;
+  }
+
+  button[type="submit"],
+  .btn-secondary {
+    font-size: 14px !important;
+    padding: 8px !important;
+  }
+}
+
+footer{
+  display: none;
+}
+
+</style>
+<div id="main-content">
+
+
+<!-- Include Sidebar -->
+{% include 'teacher/_sidebar.html' %}
+
+<div class="container">
+  <div class="card upload-card">
+    <div class="card-header text-center py-3">
+      <h3><i class="fa-solid fa-note-sticky me-2"></i>Upload Course Note</h3>
+    </div>
+    <div class="card-body p-4">
+      <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        {% csrf_token %}
+
+        <!-- Form Fields -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Title</label>
+          {{ form.title|add_class:"form-control" }}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">
+            <i class="fa-solid fa-file-alt me-2 text-warning"></i>Content
+          </label>
+          {{ form.content|add_class:"form-control" }}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">
+            <i class="fa-solid fa-upload me-2 text-danger"></i>Upload File
+          </label>
+          {{ form.upload_file|add_class:"form-control" }}
+        </div>
+
+        <!-- Submit / Cancel -->
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary btn-lg flex-fill">
+            <i class="fa-solid fa-cloud-arrow-up me-2"></i>Upload Note
+          </button>
+          {% if course %}
+            <a href="{% url 'teacher:course_notes' course.id %}" class="btn btn-secondary btn-lg flex-fill">
+              <i class="fa-solid fa-arrow-left me-2"></i>Cancel
+            </a>
+          {% else %}
+            <a href="{% url 'teacher:notes' %}" class="btn btn-secondary btn-lg flex-fill">
+              <i class="fa-solid fa-arrow-left me-2"></i>Cancel
+            </a>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}

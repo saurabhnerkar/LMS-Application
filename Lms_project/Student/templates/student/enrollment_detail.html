@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>{{ enrollment.course.name }}</h2>
+  <p>Status: {{ enrollment.status }}</p>
+  <p>Enrolled on: {{ enrollment.enrolled_on }}</p>
+  <a href="{% url 'student:submit_assignment' enrollment.pk %}" class="btn btn-warning">Submit Assignment</a>
+</div>
+{% endblock %}

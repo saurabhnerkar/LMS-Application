@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Student Profile</h2>
+  <ul class="list-group">
+    <li class="list-group-item"><strong>Name:</strong> {{ object.user.get_full_name }}</li>
+    <li class="list-group-item"><strong>Email:</strong> {{ object.user.email }}</li>
+    <li class="list-group-item"><strong>Address:</strong> {{ object.address }}</li>
+    <li class="list-group-item"><strong>Mobile Number:</strong> {{ object.mobile_number }}</li>
+    <li class="list-group-item"><strong>Education:</strong> {{ object.educational_background }}</li>
+    <li class="list-group-item"><strong>Passing Year:</strong> {{ object.passing_year }}</li>
+    <li class="list-group-item"><strong>Bio:</strong> {{ object.bio }}</li>
+  </ul>
+  <a href="{% url 'student:studentprofile_update' %}" class="btn btn-info mt-3">Edit Profile</a>
+</div>
+{% endblock %}

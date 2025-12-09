@@ -1,0 +1,280 @@
+<!-- 
+  /* Sidebar styling (shared include) */
+  /* #sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #fff;
+    border-right: 1px solid #dee2e6;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    padding-top: 1rem;
+    margin-top: 40px;
+  }
+
+  #sidebar a {
+    display: block;
+    padding: 10px 20px;
+    color: #333;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  #sidebar a:hover,
+  #sidebar a.active {
+    background-color: #f0fdf4;
+    color: #198754;
+  } */
+
+  /* Main content adjustment for desktop */
+  /* #main-content {
+    margin-left: 250px;
+    padding: 30px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+  } */
+
+  /* Mobile sidebar */
+  /* @media (max-width: 768px) {
+    #sidebar { */
+      /* left: -260px; hide offscreen */
+      /* transition: left 0.3s ease-in-out;
+      overflow-y: auto;
+      z-index: 3000;
+    }
+
+    #sidebar.active {
+      left: 0;
+    }
+  }
+</style> */ -->
+
+<!-- <nav id="sidebar">
+  <ul class="list-unstyled mt-3">
+    <li><a href="{% url 'student:student_dashboard' %}" class="active"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a></li>
+    <li><a href="{% url 'student:course_list' %}"><i class="bi bi-book me-2"></i> Courses</a></li>
+    <li><a href="{% url 'accounts:blog' %}"><i class="bi bi-journal-text me-2"></i> Blog</a></li>
+    <li><a href="{% url 'student:feedback_course_list' %}"><i class="bi bi-chat-left-text me-2"></i> Feedback</a></li>
+    <li><a href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-left me-2"></i> Sign Out</a></li>
+  </ul>
+</nav> -->
+
+
+
+
+
+
+<style>
+  /* Sidebar styling (shared include) */
+  #sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #fff;
+    border-right: 1px solid #dee2e6;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    padding-top: 1rem;
+    margin-top: 48px;
+   
+
+  }
+
+  #sidebar h5 {
+    font-weight: 700;
+  }
+
+  #sidebar a {
+    display: block;
+    padding: 10px 20px;
+    color: #333;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+   
+  }
+
+  #sidebar a:hover,
+  #sidebar a.active {
+    background-color: #f0fdf4;
+    color: #198754;
+  }
+
+  /* Main content area adjustment when sidebar is present */
+  #main-content {
+    margin-left: 250px;
+    padding: 30px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+  }
+
+
+
+  
+
+/* ==== Mobile Sidebar Toggle Button ==== */
+#mobileSidebarToggle {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 9999;
+    padding: 10px 14px;
+    font-size: 20px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    display: none; /* hidden on desktop */
+    margin-top: 40px;        /* i  add */
+}
+
+/* Show toggle button only on mobile */
+@media (max-width: 768px) {
+    #mobileSidebarToggle {
+        display: block;
+    }
+
+    /* Sidebar initially hidden on mobile */
+    #sidebar {
+        transform: translateX(-100%);
+        transition: 0.3s ease-in-out;
+    }
+
+    #sidebar.mobile-active {
+        transform: translateX(0);
+    }
+}
+
+/* ==== Mobile Sidebar Toggle Button ==== */
+#mobileSidebarToggle {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 9999;
+    padding: 10px 14px;
+    font-size: 20px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    display: none; /* hidden on desktop */
+    margin-top: 40px;        /* i  add */
+}
+
+/* Show toggle button only on mobile */
+@media (max-width: 768px) {
+    #mobileSidebarToggle {
+        display: block;
+    }
+
+    /* Sidebar initially hidden on mobile */
+    #sidebar {
+        transform: translateX(-100%);
+        transition: 0.3s ease-in-out;
+    }
+
+    #sidebar.mobile-active {
+        transform: translateX(0);
+    }
+}
+
+/* ==== Mobile Sidebar Toggle Button ==== */
+#mobileSidebarToggle {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 9999;
+    padding: 10px 14px;
+    font-size: 20px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    display: none; /* hidden on desktop */
+    margin-top: 40px;        /* i  add */
+}
+
+/* Show toggle button only on mobile */
+@media (max-width: 768px) {
+    #mobileSidebarToggle {
+        display: block;
+    }
+
+    /* Sidebar initially hidden on mobile */
+    #sidebar {
+        transform: translateX(-100%);
+        transition: 0.3s ease-in-out;
+    }
+
+    #sidebar.mobile-active {
+        transform: translateX(0);
+    }
+}
+
+
+</style>
+
+
+
+<!-- Sidebar -->
+<nav id="sidebar">
+  <!-- <div class="p-3 border-bottom text-center">
+    <h5 class="text-success mb-0">
+      <i class="bi bi-mortarboard-fill me-2"></i>ITpreneur
+    </h5>
+  </div> -->
+  <ul class="list-unstyled mt-3">
+     <li><a href="{% url 'student:student_dashboard' %}" class="active"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a></li>
+    <li><a href="{% url 'student:course_list' %}"><i class="bi bi-book me-2"></i> Courses</a></li>
+    <li><a href="{% url 'accounts:blog' %}"><i class="bi bi-journal-text me-2"></i> Blog</a></li>
+    <li><a href="{% url 'student:feedback_course_list' %}"><i class="bi bi-chat-left-text me-2"></i> Feedback</a></li>
+    <li><a href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-left me-2"></i> Sign Out</a></li>
+  </ul>
+</nav>
+
+
+
+<script>
+  
+// Create mobile toggle button
+document.addEventListener("DOMContentLoaded", function () {
+
+    // 1. Create Button
+    const btn = document.createElement("button");
+    btn.id = "mobileSidebarToggle";
+    btn.innerHTML = "☰";
+
+    document.body.appendChild(btn);
+
+    const sidebar = document.getElementById("sidebar");
+
+    // 2. When clicking the button -> open sidebar
+    btn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        sidebar.classList.add("mobile-active");
+        btn.style.display = "none"; // hide button when sidebar is open
+    });
+
+    // 3. Click outside → close sidebar
+    document.addEventListener("click", function (e) {
+
+        // Only close when sidebar is open
+        if (sidebar.classList.contains("mobile-active")) {
+
+            // If click is NOT inside sidebar
+            if (!sidebar.contains(e.target)) {
+                sidebar.classList.remove("mobile-active");
+                btn.style.display = "block"; // show button again
+            }
+        }
+    });
+
+});
+
+
+</script>

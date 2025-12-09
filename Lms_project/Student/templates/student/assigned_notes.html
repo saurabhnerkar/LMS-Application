@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Assigned Notes{% endblock %}
+
+{% block content %}
+{% include 'student/_sidebar.html' %}
+<div class="main-content" style="margin-left:200px; padding:35px; background:#f4f8fb; min-height:100vh;">
+  <a href="javascript:history.back()" class="btn btn-outline-danger go-back-btn" >
+    <i class="fas fa-arrow-left"></i> Go Back
+  </a>
+  <h2 class="mb-4 text-dark fw-bold text-center">Notes</h2>
+
+  {% if notes %}
+   <div class="row">
+  {% for note in notes %}
+    <div class="col-md-6 mb-4"> <!-- 2 cards per row on medium+ screens -->
+      <div class="card shadow-sm h-100" style="border-radius: 15px;">
+        
+        <!-- Optional: add an image at top if needed -->
+        {% if note.image %}
+        <div class="ratio ratio-16x9">
+          <img src="{{ note.image.url }}" class="card-img-top" alt="{{ note.title }}" style="object-fit: cover;">
+        </div>
+        {% endif %}
+        
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title fw-bold">{{ note.title }}</h5>
+          <p class="card-text text-muted mb-3">{{ note.content|truncatewords:20 }}</p>
+
+          <div class="mt-auto d-flex gap-2 flex-wrap">
+            <a href="{% url 'student:view_note' course.id note.id %}" class="btn btn-outline-primary btn-sm flex-grow-1">
+              View Details
+            </a>
+            {% if note.file %}
+            <a href="{{ note.upload_file.url }}" target="_blank" class="btn btn-outline-success btn-sm flex-grow-1">
+              View / Download Note
+            </a>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+  {% else %}
+    <p class="text-muted">No notes assigned yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Assigned Notes{% endblock %}
+
+{% block content %}
+{% include 'student/_sidebar.html' %}
+<div class="main-content" style="margin-left:200px; padding:35px; background:#f4f8fb; min-height:100vh;">
+  <a href="javascript:history.back()" class="btn btn-outline-danger go-back-btn" >
+    <i class="fas fa-arrow-left"></i> Go Back
+  </a>
+  <h2 class="mb-4 text-dark text-center fw-bold">Assignments</h2>
+
+  {% if assignments %}
+    <div class="row">
+      {% for assignment in assignments %}
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ assignment.title }}</h5>
+              {% if assignment.id in submitted_ids %}
+    <span class="badge bg-success">Submitted</span>
+{% else %}
+    <span class="badge bg-danger">Pending</span>
+{% endif %}
+
+              <p class="card-text text-muted">{{ assignment.content|truncatewords:15 }}</p>
+              <a href="{% url "student:view_assignment" course.id assignment.id %}"><button class="btn btn-outline-primary btn-sm">View Details</button></a>
+              {% if assignment.file %}
+                <a href="{{ assignment.upload_file.url }}" class="btn btn-outline-success btn-sm" target="_blank">
+                  View / Download Assignment
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">No assignments assigned yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

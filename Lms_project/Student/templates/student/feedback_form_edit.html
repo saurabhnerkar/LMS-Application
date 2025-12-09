@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <h3>Edit Your Feedback</h3>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label>1. Relevance Rating</label>
+        <input type="number" name="relevance_rating" value="{{ form.relevance_rating.value }}" min="1" max="5" class="form-control mb-3">
+
+        <label>2. Material Easy?</label>
+        {{ form.material_easy }}
+
+        <label>3. Trainer Knowledge</label>
+        <input type="number" name="trainer_knowledge_rating" value="{{ form.trainer_knowledge_rating.value }}" min="1" max="5" class="form-control mb-3">
+
+        <label>4. Duration Appropriate</label>
+        {{ form.duration_appropriate }}
+
+        <label>5. Achieved Objective?</label>
+        {{ form.achieved_objective }}
+
+        <label>6. Recommend Trainer?</label>
+        {{ form.recommend_trainer }}
+
+        <label>7. Overall Satisfaction</label>
+        <input type="number" name="overall_satisfaction_rating" value="{{ form.overall_satisfaction_rating.value }}" min="1" max="5" class="form-control mb-3">
+
+        <label>8. Suggestions</label>
+        {{ form.improvement_suggestions }}
+
+        <button type="submit" class="btn btn-primary mt-3">Update Feedback</button>
+    </form>
+</div>
+
+{% endblock %}

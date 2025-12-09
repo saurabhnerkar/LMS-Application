@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  /* ============================
+   GENERAL RESPONSIVENESS
+=============================== */
+
+#main-content {
+    margin-left: 260px;        /* space for sidebar */
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+}
+
+/* Mobile / Tablet */
+@media (max-width: 991px) {
+    #main-content {
+        margin-left: 0 !important;   /* remove left space */
+        padding: 15px;
+    }
+}
+
+/* Heading spacing fix */
+.go-back-btn {
+    margin-bottom: 15px;
+}
+
+/* ============================
+   QUIZ CARDS RESPONSIVE DESIGN
+=============================== */
+
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Make card header colored */
+.card-header {
+    background: #4A90E2 !important; /* Beautiful blue */
+    color: white !important;
+}
+
+/* Force title color */
+.card-header h5 {
+    color: white !important;
+}
+
+/* Card content responsiveness */
+.card-body > div {
+    font-size: 15px;
+}
+
+/* On small screens, reduce icon + text spacing */
+@media (max-width: 767px) {
+    .card-body .d-flex {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
+    .card-body .d-flex span {
+        margin-top: 5px;
+    }
+}
+
+/* ============================
+   QUIZ GRID RESPONSIVE FIX
+=============================== */
+
+@media (max-width: 767px) {
+    .col-md-6 {
+        width: 100% !important;
+    }
+}
+
+/* ============================
+   RESPONSIVE STYLE FOR HEADER SECTION
+=============================== */
+
+@media (max-width: 767px) {
+    .d-flex.justify-content-between {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .d-flex.justify-content-between a {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* ============================
+   DROPDOWN FIX FOR SMALL DEVICES
+=============================== */
+
+.dropdown-menu {
+    font-size: 14px;
+}
+
+/* Progress bar rounded */
+.progress {
+    border-radius: 20px;
+}
+.progress-bar {
+    border-radius: 20px;
+}
+footer{
+  display: none;
+}
+</style>
+
+
+{% include 'teacher/_sidebar.html' %}
+<div class="div1" style="margin-left:200px; padding:20px; background:#f4f8fb; min-height:100vh;">
+<div class="container mt-5">
+
+  <!-- Go Back Button -->
+  <a href="javascript:history.back()" class="btn btn-outline-danger go-back-btn">
+    <i class="fas fa-arrow-left"></i> Go Back
+  </a>
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+    <h2 class="mb-0">
+      <i class="fa-solid fa-question-circle me-2 text-primary"></i>
+      Course Quizzes
+    </h2>  
+    <a href="{% url 'teacher:add_quiz' course.id %}" class="btn btn-primary">
+      <i class="fa-solid fa-plus me-2"></i>Add New Quiz
+    </a>
+  </div>
+
+  {% if quizzes %}
+    <div class="row">
+      {% for quiz in quizzes %}
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-light">
+              <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">{{ quiz.title }}</h5>
+                <div class="dropdown">
+                  <button class="btn btn-link text-dark" type="button" data-bs-toggle="dropdown">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <a class="dropdown-item" href="{% url 'teacher:quiz_detail' quiz.id %}">
+                        <i class="fa-solid fa-eye me-2"></i>View Details
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="{% url 'teacher:edit_quiz' quiz.id %}">
+                        <i class="fa-solid fa-edit me-2"></i>Edit
+                      </a>
+                    </li>
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                      <a class="dropdown-item text-danger" href="{% url 'teacher:delete_quiz' quiz.id %}">
+                        <i class="fa-solid fa-trash me-2"></i>Delete
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <p class="text-muted mb-3">{{ quiz.description|truncatewords:30 }}</p>
+              
+              <!-- Quiz Schedule -->
+              <div class="d-flex align-items-center mb-2">
+                <i class="fa-solid fa-calendar-check text-success me-2"></i>
+                <span>Start: {{ quiz.start_time|date:"M d, Y, h:i A" }}</span>
+              </div>
+              <div class="d-flex align-items-center mb-3">
+                <i class="fa-solid fa-calendar-xmark text-danger me-2"></i>
+                <span>End: {{ quiz.end_time|date:"M d, Y, h:i A" }}</span>
+              </div>
+
+              <!-- Total Marks -->
+              <div class="d-flex align-items-center mb-3">
+                <i class="fa-solid fa-star text-warning me-2"></i>
+                <span>Total Marks: {{ quiz.total_marks }}</span>
+              </div>
+
+              <!-- Participation stats (if you have stats data, optional) -->
+              {% if quiz.total_students %}
+              <div class="progress mb-3" style="height: 10px;">
+                <div class="progress-bar bg-success" role="progressbar"
+                     style="width: {{ quiz.participation_percentage }}%"
+                     aria-valuenow="{{ quiz.participation_percentage }}"
+                     aria-valuemin="0" aria-valuemax="100">
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between text-muted small">
+                <span>
+                  <i class="fa-solid fa-user-check text-success me-1"></i>
+                  {{ quiz.participated_count }} Attempted
+                </span>
+                <span>
+                  <i class="fa-solid fa-user-clock text-warning me-1"></i>
+                  {{ quiz.not_attempted_count }} Pending
+                </span>
+                <span>
+                  <i class="fa-solid fa-users text-primary me-1"></i>
+                  {{ quiz.total_students }} Total
+                </span>
+              </div>
+              {% endif %}
+            </div>
+
+            <div class="card-footer bg-white border-0">
+              <a href="{% url 'teacher:quiz_detail' quiz.id %}" 
+                 class="btn btn-outline-primary w-100">
+                <i class="fa-solid fa-list-check me-2"></i>View Quiz Details
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center">
+      <i class="fa-solid fa-info-circle me-2"></i>
+      No quizzes created yet for this course.
+      <a href="{% url 'teacher:add_quiz' course.id %}" class="alert-link">Create your first quiz</a>
+    </div>
+  {% endif %}
+</div>
+</div>
+{% endblock %}

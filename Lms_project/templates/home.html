@@ -1,0 +1,351 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Custom Styles -->
+<style>
+    /* .hero-section {
+        background: url('/static/images/hero_img.jpg') center center/cover no-repeat;
+        padding: 60px 0;
+        min-height: 480px;
+        border-bottom-right-radius: 42px;
+        border-bottom-left-radius: 42px;
+        position: relative;
+        color: #222;
+        
+    } */
+     .hero-section {
+    position: relative;
+    background: url('/static/images/hero_img.jpg') center center/cover no-repeat;
+    padding: 60px 0;
+    min-height: 480px;
+    /* border-bottom-right-radius: 42px; */
+    /* border-bottom-left-radius: 42px; */
+    color: #222;
+    overflow: hidden; /* contain shadow */
+}
+
+/* Left shadow overlay */
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 0;
+    width: 900px; /* width of shadow on left */
+    background: linear-gradient(to right,white, transparent);
+    pointer-events: none; /* allow clicks through */
+    z-index: 1;
+}
+
+/* All content inside hero-section above shadow */
+.hero-section > * {
+    position: relative;
+    z-index: 2;
+}
+
+
+    .hero-highlight {
+        color: #1b8a4e;
+    }
+
+    .custom-card,
+    .custom-form {
+        border-radius: 18px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, .09);
+    }
+
+    .custom-form {
+        max-width: 400px;
+        margin: auto;
+    }
+
+    .btn-success,
+    .bg-success {
+        background: #1b8a4e !important;
+        border: none;
+    }
+
+    .btn-success:hover {
+        background: #166e3f !important;
+    }
+
+    .custom-footer {
+        background: #111;
+        color: #fff;
+        border-top-left-radius: 42px;
+        border-top-right-radius: 42px;
+    }
+
+    .custom-footer .card {
+        background: #111;
+        color: #fff;
+        border: none;
+    }
+
+    .blog-section h2 span,
+    .testimonial-section h2 span {
+        color: #1b8a4e;
+    }
+
+    .section-divider {
+        border-bottom: 3px solid #1b8a4e;
+        width: 50px;
+        margin: 12px auto 24px auto;
+    }
+
+    .blog-card img {
+        min-height: 80px;
+    }
+
+    @media (max-width: 992px) {
+        .hero-section {
+            border-radius: 0;
+            min-height: 320px;
+        }
+
+        .custom-footer {
+            border-radius: 0;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .hero-section {
+            padding: 30px 0;
+        }
+
+        .custom-form {
+            padding: 12px;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="container-fluid hero-section mb-3">
+    <div class="row align-items-center">
+        <div class="col-lg-6 col-12 px-5">
+            <h1>
+                Explore <span class="hero-highlight">ITPRENEUR</span>
+            </h1>
+            <p>Turning curiosity into clarity. We have everything that you need to grow.</p>
+            <a href="{% url 'accounts:register' %}" class="btn btn-success btn-lg">Explore More!</a>
+        </div>
+        <div class="col-lg-6 col-12 d-flex justify-content-lg-end mt-4 mt-lg-0">
+            <form class="p-4 bg-white rounded custom-form shadow" style="width: 100%;">
+                <h3 class="mb-3">Get in touch</h3>
+                <input type="text" class="form-control mb-2" placeholder="Your Name *">
+                <input type="email" class="form-control mb-2" placeholder="Your Email *">
+                <input type="text" class="form-control mb-2" placeholder="Your Mobile Number *">
+                <button type="submit" class="btn btn-success btn-block mt-2 w-100">Submit Enquiry</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ITpreneur About Section -->
+<!-- <div class="container my-5 py-3">
+    <div class="row align-items-center">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <h3><strong>ITPRENEUR</strong></h3>
+            <p>A space to explore, learn, and grow.<br>
+                iTpreneur is one of Maharashtra’s most trusted IT training and placement institutes, bridging the gap
+                between academic knowledge and industry-ready skills. Based in Pune, iTpreneur has been a pioneer in
+                nurturing fresh graduates into highly employable professionals in the IT domain.</p>
+        </div>
+        <div class="col-lg-6 text-center">
+            <!-- Example Youtube Player Embed -->
+            <!-- <div class="ratio ratio-16x9">
+                <iframe src="https://www.youtube.com/embed/somevideoid" allowfullscreen title="YouTube video"></iframe>
+            </div>
+        </div>
+    </div>
+</div>  -->
+
+
+<!-- Courses Section -->
+<div class="container my-5 text-center">
+    <h2>Popular IT Courses</h2>
+    <div class="section-divider"></div>
+    <div class="row justify-content-center">
+        <div class="col-md-3 mb-4">
+            <div class="card custom-card h-100">
+                <img src="https://nrichbuckets.objectstore.e2enetworks.net/95mpiboienhw/no8HcroppedImage.png"
+                    class="card-img-top" alt="Full Stack Java Development">
+                <div class="card-body">
+                    <h5 class="card-title">Full Stack Java Development</h5>
+                    <p class="card-text">Learn building robust Java applications.</p>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'student:course_detail' 1 %}" class="btn btn-success">Know More</a>
+                    {% else %}
+                    <a href="{% url 'accounts:register' %}?next={% url 'student:course_detail' 1 %}"
+                        class="btn btn-success">Know More</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card custom-card h-100">
+                <img src="https://nrichbuckets.objectstore.e2enetworks.net/95mpiboienhw/fEbKcroppedImage.jpg"
+                    class="card-img-top" alt="Full Stack Dot Net Development">
+                <div class="card-body">
+                    <h5 class="card-title">Full Stack Dot Net Development</h5>
+                    <p class="card-text">Master .NET for enterprise projects.</p>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'student:course_detail' 2 %}" class="btn btn-success">Know More</a>
+                    {% else %}
+                    <a href="{% url 'accounts:register' %}?next={% url 'student:course_detail' 2 %}"
+                        class="btn btn-success">Know More</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card custom-card h-100">
+                <img src="https://nrichbuckets.objectstore.e2enetworks.net/95mpiboienhw/jcnmcroppedImage.png"
+                    class="card-img-top" alt="Data Analytics And Business Analytics">
+                <div class="card-body">
+                    <h5 class="card-title">Data Analytics And Business Analytics</h5>
+                    <p class="card-text">Comprehensive data analytics and BI with AI modules.</p>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'student:course_detail' 3 %}" class="btn btn-success">Know More</a>
+                    {% else %}
+                    <a href="{% url 'accounts:register' %}?next={% url 'student:course_detail' 3 %}"
+                        class="btn btn-success">Know More</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card custom-card h-100">
+                <img src="https://nrichbuckets.objectstore.e2enetworks.net/95mpiboienhw/a7tzcroppedImage.png"
+                    class="card-img-top" alt="Python Web Dev & Data Science">
+                <div class="card-body">
+                    <h5 class="card-title">Python Web Dev & Data Science</h5>
+                    <p class="card-text">Become a pro in Python web, analytics, and ML.</p>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'student:course_detail' 4 %}" class="btn btn-success">Know More</a>
+                    {% else %}
+                    <a href="{% url 'accounts:register' %}?next={% url 'student:course_detail' 4 %}"
+                        class="btn btn-success">Know More</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Testimonials Section -->
+<div class="container my-5 testimonial-section text-center">
+    <h2>Check out what our <span>Students say about us!</span></h2>
+    <div class="section-divider"></div>
+    <div class="row justify-content-center">
+        <div class="col-md-3 mb-4">
+            <div class="card custom-card h-100">
+                <img src="https://nrichvideos.objectstore.e2enetworks.net/9iK9WhatsAppImage2025-09-24at12.42.13PM(1).jpeg"
+                    class="card-img-top" alt="Tithi Suryawanshi">
+                <div class="card-body">
+                    <h5 class="card-title">Tithi Suryawanshi</h5>
+                    <p><b>Placed at 5.5 LPA</b></p>
+                    <p class="card-text">Highly recommended for learning and career growth.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card custom-card h-100">
+                <img src="https://nrichvideos.objectstore.e2enetworks.net/sWABWhatsAppImage2025-09-24at12.38.28PM(4).jpeg"
+                    class="card-img-top" alt="Ashwini Chavare">
+                <div class="card-body">
+                    <h5 class="card-title">Ashwini Chavare</h5>
+                    <p><b>Secured as HR Executive at 4.5 LPA</b></p>
+                    <p class="card-text">Excellent support and training at ITPRENEUR.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card custom-card h-100">
+                <img src="https://nrichvideos.objectstore.e2enetworks.net/LBgWWhatsAppImage2025-09-24at12.38.29PM.jpeg"
+                    class="card-img-top" alt="Ritesh Ahire">
+                <div class="card-body">
+                    <h5 class="card-title">Ritesh Ahire</h5>
+                    <p><b>Placed as Full Stack Developer at 6 LPA</b></p>
+                    <p class="card-text">Great mentors, real projects, and placements guaranteed!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Blog/Insight Hub Section -->
+<div class="container mt-5 mb-5 text-center blog-section">
+    <h2>Your Insight Hub!<br><span>Explore our Blogs</span></h2>
+    <div class="section-divider"></div>
+    <p class="lead">Explore ITPRENEUR's collection of insightful blogs, covering expert tips, learning strategies, and
+        industry trends.</p>
+    <div class="row justify-content-center">
+        <!-- Repeat for however many blog cards you need -->
+        <div class="col-md-3 mb-4">
+            <div class="card custom-card blog-card h-100">
+                <img src="https://nrichvideos.objectstore.e2enetworks.net/7c6Wundefined" class="card-img-top"
+                    alt="A recruiting guide">
+                <div class="card-body">
+                    <h5 class="card-title">Get Hired Right: A Recruiting Guide</h5>
+                    <p class="card-text">Master the IT hiring process, certification tips, and more.</p>
+                    <span class="small text-muted">Author: Vinayak Patil</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card custom-card blog-card h-100">
+                <img src="https://nrichvideos.objectstore.e2enetworks.net/pJ62undefined" class="card-img-top" alt="Empowering Developers">
+                <div class="card-body">
+                    <h5 class="card-title">Empowering Future Developers</h5>
+                    <p class="card-text">Pro tips and motivation for modern tech careers.</p>
+                    <span class="small text-muted">Author: Vinayak Patil</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card custom-card blog-card h-100">
+                <img src="https://nrichvideos.objectstore.e2enetworks.net/4ZBnundefined" class="card-img-top" alt="Empowering Cloud Professionals">
+                <div class="card-body">
+                    <h5 class="card-title">Empowering Cloud Professionals</h5>
+                    <p class="card-text">Journey in the world of cloud technologies.</p>
+                    <span class="small text-muted">Author: Vinayak Patil</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="{% url 'accounts:blog' %}" class="btn btn-light border mt-2">View all &rarr;</a>
+
+    <!-- Footer Section / Contact / Map -->
+<div class="container-fluid py-5 custom-footer mt-5">
+    <div class="card mx-auto" style="max-width:1200px;">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-7 mb-4 mb-md-0">
+                    <h3 class="mb-3">Head Office</h3>
+                    <p>
+                        <i class="fa fa-map-marker-alt mr-2"></i>
+                        iTpreneur, 2nd, 3rd Floor, Parthiv, 1264/J,<br>
+                        Wrangler Paranjape Road, Jangali Maharaj Rd, above TJSB Bank, Deccan Gymkhana,<br>
+                        Pune, Maharashtra 411004
+                    </p>
+                    <h4 class="mt-4 mb-3">Support Enquiries</h4>
+                    <p><i class="fa fa-envelope mr-2"></i>
+                        <a href="mailto:vinayak.p@itpreneurpune.com" class="text-white">vinayak.p@itpreneurpune.com</a>
+                    </p>
+                    <p><i class="fa fa-phone mr-2"></i>9766593275</p>
+                </div>
+                <div class="col-md-5">
+                    <div class="rounded overflow-hidden border border-2" style="border-color:#222 !important;">
+                        <iframe src="https://www.google.com/maps?q=18.5197222,73.8452778&hl=es;z=14&amp;output=embed"
+                            width="100%" height="270" frameborder="0" style="border:0;" allowfullscreen=""
+                            aria-hidden="false" tabindex="0">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include 'teacher/_sidebar.html' %}
+
+<div class="div1" style="margin-left:200px; padding:35px; background:#f4f8fb; min-height:100vh;">
+     <!-- Go Back Button -->
+  <a href="javascript:history.back()" class="btn btn-outline-danger go-back-btn" style ="margin-left: 8.5em;">
+    <i class="fas fa-arrow-left"></i> Go Back
+  </a>
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-0 text-primary">
+        {% if course %}
+          {{ course.title }} - Assignments
+        {% else %}
+          All Assignments
+        {% endif %}
+      </h2>
+      {% if course %}
+        <a href="{% url 'teacher:assignments' %}" class="text-muted text-decoration-none small">
+          <i class="fa-solid fa-arrow-left me-1"></i>View All Assignments
+        </a>
+      {% endif %}
+    </div>
+    {% if course %}
+      <a href="{% url 'teacher:add_assignment' course.id %}" class="btn btn-success">
+        <i class="fa-solid fa-plus me-2"></i> Add Assignment
+      </a>
+    {% else %}
+      <div class="alert alert-info mb-0 py-2">
+        <small><i class="fa-solid fa-info-circle me-1"></i>Select a course to add assignments</small>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if assignments %}
+    <div class="row">
+      {% for assignment in assignments %}
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100 border-0">
+            <div class="card-body">
+              <h5 class="card-title text-primary">{{ assignment.title }}</h5>
+              <p class="card-text text-muted small mb-2">
+                <strong>Course:</strong> {{ assignment.course.title }}
+              </p>
+              {% if assignment.instructions %}
+                <p class="card-text">{{ assignment.instructions|truncatewords:15 }}</p>
+              {% endif %}
+              <p class="text-secondary small mb-1">
+                <strong>Due Date:</strong> {{ assignment.due_date|date:"d M Y" }}
+              </p>
+              <p class="text-secondary small">
+                <strong>Created On:</strong> {{ assignment.created_at|date:"d M Y" }}
+              </p>
+              {% if assignment.upload_file %}
+                <a href="{{ assignment.upload_file.url }}" class="btn btn-outline-info btn-sm mt-2" target="_blank">
+                  <i class="fa-solid fa-download me-1"></i> Download File
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center mt-4">
+      No assignments added yet.
+    </div>
+  {% endif %}
+
+</div>
+</div>
+{% endblock %}
