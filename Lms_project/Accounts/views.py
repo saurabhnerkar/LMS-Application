@@ -9,11 +9,11 @@ from django.utils import timezone
 from .models import *
 from .forms import *
 from django.views.decorators.csrf import csrf_protect
+from django.core.cache import cache
+import random
 
-# Create your views here.
 
 
-# Blog
 def blog(request):
     return render(request, "blog.html")
 
@@ -75,53 +75,76 @@ def register_teacher(request):
         user_form = TeacherRegistrationForm()
     return render(request, "accounts/register_teacher.html", {"user_form": user_form})
 
-# views.py
 
 def login_view(request):
     if request.method == "POST":
-        print("Login POST request received")
         form = LoginForm(request, data=request.POST)
+
+        email = request.POST.get("username")
+        ip = request.META.get("REMOTE_ADDR")
+        attempt_key = f"login_attempts_{email}_{ip}"
+        attempts = cache.get(attempt_key, 0)
+        if attempts >= 5:
+            messages.error(request, "Too many failed attempts. Try again after 1 hour.")
+            return render(request, "accounts/login.html", {"form": form})
+
         if form.is_valid():
-            print("Login form is valid")
-            email = form.cleaned_data.get("username")  # This will now be email
             password = form.cleaned_data.get("password")
             role = form.cleaned_data.get("role")
 
             user = authenticate(request, username=email, password=password)
-
             if user is None:
-                messages.error(request, "Invalid email or password.")
-            elif user.role != role:
+                attempts += 1
+                cache.set(attempt_key, attempts, timeout=3600)  # Lock time = 1 hour
+                remaining = 5 - attempts
+                if remaining > 0:
+                    messages.error(request, f"Invalid credentials. {remaining} attempts left.")
+                else:
+                    messages.error(request, "Too many failed attempts. Account locked for 1 hour.")
+                return render(request, "accounts/login.html", {"form": form})
+
+            if user.role != role:
                 messages.error(request, f"You are not registered as a {role}.")
-            elif not user.is_email_verified and role != "admin":
-                # Only apply OTP verification for non-admin users
+                return render(request, "accounts/login.html", {"form": form})
+
+        
+            if not user.is_email_verified and role != "admin":
                 send_otp_email(user)
                 request.session["pending_user_id"] = user.id
+                request.session["login_after_otp"] = False
                 messages.info(request, "Email not verified. OTP sent.")
                 return redirect("accounts:verify_otp")
-            else:
-                login(request, user)
-                return _redirect_by_role(user)
+
+          
+            cache.delete(attempt_key)
+            send_otp_email(user)
+            request.session["pending_user_id"] = user.id
+            request.session["login_after_otp"] = True
+            messages.info(request, "OTP sent for login verification.")
+            return redirect("accounts:verify_otp")
+
         else:
-            print("Form is invalid — errors:", form.errors)
             messages.error(request, "Please correct the errors below.")
     else:
         form = LoginForm(request)
+
     return render(request, "accounts/login.html", {"form": form})
+
 
 
 def logout_view(request):
     logout(request)
     return redirect("home")
 
+
+
+
 def send_otp_email(user):
     otp = str(random.randint(100000, 999999))
-    expires_at = timezone.now() + timedelta(minutes=5)
 
-    # create OTP record
-    LoginOTP.objects.create(user=user, otp=otp, expires_at=expires_at)
+    # Store OTP in Redis (expires in 5 minutes)
+    cache.set(f"otp_{user.id}", otp, timeout=300)
 
-    # send OTP to email
     send_mail(
         'Your LMS Login OTP',
         f'Hi {user.first_name}, your OTP is {otp}. It is valid for 5 minutes.',
@@ -129,7 +152,7 @@ def send_otp_email(user):
         [user.email],
         fail_silently=False,
     )
-   
+
 def verify_otp(request):
     pending_user_id = request.session.get("pending_user_id")
     if not pending_user_id:
@@ -142,27 +165,42 @@ def verify_otp(request):
         messages.error(request, "User not found.")
         return redirect("accounts:login")
 
-    if request.method == 'POST':
-        otp_input = request.POST.get('otp')
-        otp_record = LoginOTP.objects.filter(user=user, is_used=False).order_by('-created_at').first()
+    if request.method == "POST":
+        otp_input = request.POST.get("otp")
 
-        if not otp_record:
-            messages.error(request, 'No OTP found or already used.')
-        elif otp_record.is_expired():
-            messages.error(request, 'OTP expired! Please request again.')
-        elif otp_record.otp == otp_input:
-            otp_record.is_used = True
-            otp_record.save(update_fields=['is_used'])
+        
+        saved_otp = cache.get(f"otp_{user.id}")
+
+        if not saved_otp:
+            messages.error(request, "OTP expired or not found.")
+            return redirect("accounts:verify_otp")
+
+        if otp_input == saved_otp:
+           
+            cache.delete(f"otp_{user.id}")
+
+           
+            if request.session.get("login_after_otp") == True:
+                login(request, user)
+                messages.success(request, "Login successful!")
+                request.session.pop("pending_user_id", None)
+                request.session.pop("login_after_otp", None)
+                return _redirect_by_role(user)
+
+           
             user.is_email_verified = True
-            user.save(update_fields=['is_email_verified'])
-            login(request, user)
-            messages.success(request, 'OTP verified successfully!')
-            request.session.pop('pending_user_id', None)
-            return _redirect_by_role(user)
-        else:
-            messages.error(request, 'Invalid OTP entered.')
+            user.save(update_fields=["is_email_verified"])
 
-    return render(request, 'accounts/verify_otp.html', {"email": user.email})
+            login(request, user)
+            messages.success(request, "OTP verified successfully!")
+            request.session.pop("pending_user_id", None)
+
+            return _redirect_by_role(user)
+
+        else:
+            messages.error(request, "Invalid OTP entered.")
+
+    return render(request, "accounts/verify_otp.html", {"email": user.email})
 
 def resend_otp(request):
     pending_user_id = request.session.get('pending_user_id')
@@ -176,9 +214,12 @@ def resend_otp(request):
         messages.error(request, "User not found.")
         return redirect("accounts:verify_otp")
 
+    # Redis automatically overwrites previous OTP
     send_otp_email(user)
+
     messages.info(request, "A new OTP has been sent to your email.")
     return redirect("accounts:verify_otp")
+
 
 
 def _redirect_by_role(user: CustomUser):
