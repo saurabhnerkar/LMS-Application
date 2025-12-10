@@ -1,1 +1,1 @@
-web: gunicorn lms_core.wsgi --chdir Lms_project
+web: gunicorn lms_core.wsgi
