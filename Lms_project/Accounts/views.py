@@ -4,8 +4,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
-from datetime import timedelta
-from django.utils import timezone
 from .models import *
 from .forms import *
 from django.views.decorators.csrf import csrf_protect
@@ -20,45 +18,38 @@ def blog(request):
 def register(request):
     return render(request, "accounts/register.html")
 
+
 def register_student(request):
-    next_url = request.GET.get('next', '')  # Get next parameter from GET
+    next_url = request.GET.get('next', '')
 
     if request.method == "POST":
         user_form = StudentRegistrationForm(request.POST, request.FILES)
         profile_form = StudentProfileForm(request.POST)
-        next_url = request.POST.get('next', '')  # Get next from POST as well
+        next_url = request.POST.get('next', '')
+
         if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save(commit=False)
             user.role = "student"
             user.save()
-            profile = profile_form.save(commit=False)
-            profile.user = user
-            profile.save()
-            from django.conf import settings
-            import pprint
-            print("=== EMAIL CONFIG DEBUG ===")
-            pprint.pprint({
-                "EMAIL_HOST": settings.EMAIL_HOST,
-                "EMAIL_PORT": settings.EMAIL_PORT,
-                "EMAIL_HOST_USER": settings.EMAIL_HOST_USER,
-                "EMAIL_BACKEND": settings.EMAIL_BACKEND,
-                })
-            print("==========================")
+
             send_otp_email(user)
             messages.success(request, "Account created. Check email for OTP.")
             request.session["pending_user_id"] = user.id
-            # Save next_url in session to use after OTP verification
             if next_url:
                 request.session["pending_next_url"] = next_url
+
             return redirect("accounts:verify_otp")
+
     else:
         user_form = StudentRegistrationForm()
         profile_form = StudentProfileForm()
+
     return render(
         request,
         "accounts/register_student.html",
         {"user_form": user_form, "profile_form": profile_form, "next": next_url}
     )
+
 
 def register_teacher(request):
     if request.method == "POST":
@@ -137,8 +128,6 @@ def logout_view(request):
     return redirect("home")
 
 
-
-
 def send_otp_email(user):
     otp = str(random.randint(100000, 999999))
 
@@ -166,9 +155,7 @@ def verify_otp(request):
         return redirect("accounts:login")
 
     if request.method == "POST":
-        otp_input = request.POST.get("otp")
-
-        
+        otp_input = request.POST.get("otp")   
         saved_otp = cache.get(f"otp_{user.id}")
 
         if not saved_otp:
@@ -213,13 +200,11 @@ def resend_otp(request):
     except CustomUser.DoesNotExist:
         messages.error(request, "User not found.")
         return redirect("accounts:verify_otp")
-
-    # Redis automatically overwrites previous OTP
+  
     send_otp_email(user)
 
     messages.info(request, "A new OTP has been sent to your email.")
     return redirect("accounts:verify_otp")
-
 
 
 def _redirect_by_role(user: CustomUser):
@@ -228,7 +213,7 @@ def _redirect_by_role(user: CustomUser):
     elif user.role == "teacher":
         return redirect("teacher:teacher_dashboard")
     elif user.role == "admin":
-        return redirect("/admin/")  # built-in Django admin panel
+        return redirect("/admin/")  
     else:
         return redirect("home")
 

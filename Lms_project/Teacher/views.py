@@ -5,11 +5,9 @@ from .models import TeacherProfile, Note, TeacherAssignment, Quiz
 from .forms import *
 from Student.models import Enrollment, AssignmentSubmission, Feedback, StudentProfile
 from Courses.models import Course
-# <<<<<<< Updated upstream
 from django.forms import modelformset_factory
 from django.http import HttpResponse
 from openpyxl import Workbook
-# from openpyxl.writer.excel import save_virtual_workbook
 from io import BytesIO
 from openpyxl import Workbook
 
