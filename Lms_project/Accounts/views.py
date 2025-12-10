@@ -130,14 +130,12 @@ def logout_view(request):
 
 def send_otp_email(user):
     otp = str(random.randint(100000, 999999))
-
-    # Store OTP in Redis (expires in 5 minutes)
     cache.set(f"otp_{user.id}", otp, timeout=300)
 
     send_mail(
         'Your LMS Login OTP',
         f'Hi {user.first_name}, your OTP is {otp}. It is valid for 5 minutes.',
-        'youremail@gmail.com',
+        'lmsproject055@gmail.com',
         [user.email],
         fail_silently=False,
     )
