@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'Teacher',
     'Courses',
     'widget_tweaks',
-    'accounts.apps.AccountsConfig',
+   
 ]
 
 
