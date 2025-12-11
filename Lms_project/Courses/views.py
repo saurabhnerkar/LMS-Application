@@ -4,18 +4,14 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import Course
 from .forms import CourseForm
 
-# ---------------------------
-# ✅ Helper Functions
-# ---------------------------
+
 def is_admin(user):
     return user.is_authenticated and user.role == 'admin'
 
 def is_teacher(user):
     return user.is_authenticated and user.role == 'teacher'
 
-# ---------------------------
-# 🧑‍💼 Admin Views
-# ---------------------------
+
 @login_required
 @user_passes_test(is_admin)
 def admin_course_list(request):
@@ -54,9 +50,7 @@ def delete_course(request, pk):
     course.delete()
     return redirect('course:admin_course_list')
 
-# ---------------------------
-# 👨‍🏫 Teacher Dashboard View
-# ---------------------------
+
 @login_required
 def teacher_dashboard(request):
     teacher_profile = request.user.teacher_profile  # current logged-in teacher

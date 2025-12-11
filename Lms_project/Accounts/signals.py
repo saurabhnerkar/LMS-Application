@@ -1,15 +1,13 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
-from Accounts.models import CustomUser  
-from Student.models import StudentProfile
-from Teacher.models import TeacherProfile
 
-# Do NOT import models here — this causes AppRegistryNotReady
+
+
 
 @receiver(post_save, sender=None)
 def send_welcome_email(sender, instance, created, **kwargs):
-   
+    from Accounts.models import CustomUser 
     if sender is not CustomUser:
         return
 
@@ -33,7 +31,9 @@ def send_welcome_email(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=None)
 def create_profile_on_user_create(sender, instance, created, **kwargs):
-    
+    from Accounts.models import CustomUser
+    from Student.models import StudentProfile
+    from Teacher.models import TeacherProfile
 
     if sender is not CustomUser:
         return

@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 from Accounts.models import CustomUser
 from Teacher.models import TeacherAssignment
 from Courses.models import Course
@@ -20,20 +19,7 @@ class StudentProfile(models.Model):
     def __str__(self):
         return f"Student: {self.user.email}"
 
-# class Course(models.Model):
-#     name = models.CharField(max_length=255)
-#     description = models.TextField(blank=True)
-#     price = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
-#     instructor = models.ForeignKey(
-#         'Teacher.TeacherProfile',  
-#         on_delete=models.SET_NULL,
-#         null=True,
-#         blank=True,
-#         related_name='student_courses'
-#     )
 
-#     def __str__(self):
-#         return self.name
     
 class Enrollment(models.Model):
     student = models.ForeignKey('StudentProfile', on_delete=models.CASCADE)

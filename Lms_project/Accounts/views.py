@@ -1,12 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-from django.utils.crypto import get_random_string
 from .models import *
 from .forms import *
-from django.views.decorators.csrf import csrf_protect
 from django.core.cache import cache
 import random
 

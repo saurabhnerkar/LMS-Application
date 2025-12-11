@@ -1,15 +1,38 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import TeacherProfile, Note, TeacherAssignment, Quiz
-from .forms import *
-from Student.models import Enrollment, AssignmentSubmission, Feedback, StudentProfile
-from Courses.models import Course
-from django.forms import modelformset_factory
+from django.forms import modelformset_factory, inlineformset_factory
 from django.http import HttpResponse
+from django.conf import settings
+from django.utils import timezone
+from Teacher.models import Note, TeacherAssignment, Quiz, Question, Choice
+
 from openpyxl import Workbook
 from io import BytesIO
-from openpyxl import Workbook
+
+from .models import TeacherProfile, Note, TeacherAssignment, Quiz
+from .forms import (
+    TeacherProfileForm, 
+    NoteForm, 
+    TeacherAssignmentForm, 
+    QuizForm, 
+    QuestionForm, 
+    ChoiceFormSet, 
+    GradeSubmissionForm
+)
+
+from Courses.models import Course
+from Student.models import (
+    Enrollment, 
+    AssignmentSubmission, 
+    Feedback, 
+    StudentProfile, 
+    QuizSubmission, 
+    QuizAnswer
+)
+
+from Student.notify import notify_students
+
 
 def teacher_required(view_func):
     def _wrapped_view(request, *args, **kwargs):
@@ -660,9 +683,7 @@ def grade_submission(request, submission_id):
     }
     return render(request, 'teacher/grade_submission.html', context)
 
-from django.shortcuts import render, get_object_or_404
-from Student.models import Enrollment, QuizSubmission
-from .models import Quiz
+
 
 def quiz_submissions_list(request, quiz_id):
     quiz = get_object_or_404(Quiz, id=quiz_id)

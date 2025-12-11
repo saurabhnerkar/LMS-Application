@@ -1,10 +1,6 @@
 from django import forms
 from .models import StudentProfile, Enrollment, AssignmentSubmission, Feedback
 
-# class StudentProfileForm(forms.ModelForm):
-#     class Meta:
-#         model = StudentProfile
-#         fields = ['address','mobile_number','educational_background','passing_year','bio']
 
 
 class StudentProfileForm(forms.ModelForm):

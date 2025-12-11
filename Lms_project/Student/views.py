@@ -1,21 +1,28 @@
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView, CreateView, UpdateView,DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.utils import timezone
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.views import PasswordChangeView
-from Courses.models import Course
-from Student.models import Enrollment,StudentProfile,AssignmentSubmission,Feedback,Notification, QuizSubmission, QuizAnswer
 from django.views import View
-from django.contrib import messages
-from Teacher.models import Note, TeacherAssignment, Quiz, Question, Choice
-from .forms import StudentProfileForm, EnrollmentForm, AssignmentSubmissionForm, FeedbackForm
 from django.db import transaction
-from django.contrib.auth.views import PasswordChangeView
-from django.urls import reverse_lazy
+from Courses.models import Course
+from Student.models import (
+    Enrollment,
+    StudentProfile,
+    AssignmentSubmission,
+    Feedback,
+    Notification,
+    QuizSubmission,
+    QuizAnswer
+)
+from Teacher.models import Note, TeacherAssignment, Quiz, Question, Choice
+
+from .forms import StudentProfileForm, EnrollmentForm, AssignmentSubmissionForm, FeedbackForm
+
 
 @login_required
 def student_dashboard(request):
@@ -100,23 +107,6 @@ class StudentProfileUpdateView(UpdateView):
         messages.success(self.request, "Profile updated successfully.")
         return super().form_valid(form)
 
-
-# class CourseListView(ListView):
-#     model = Course
-#     template_name = "student/course_list.html"
-#     context_object_name = "courses"
-
-# class CourseDetailView(DetailView):
-#     model = Course
-#     template_name = "student/course_detail.html"
-#     context_object_name = "course"
-
-from django.core.mail import send_mail
-from django.conf import settings
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib import messages
-from django.views.generic.edit import CreateView
-from django.views import View
 
 
 class EnrollCourseView(View):
@@ -213,31 +203,6 @@ class AssignmentSubmissionDetailView(DetailView):
     def get_queryset(self):
         student_profile = get_object_or_404(StudentProfile, user=self.request.user)
         return AssignmentSubmission.objects.filter(enrollment__student=student_profile)
-
-# class FeedbackCreateView(CreateView):
-#     model = Feedback
-#     fields = ["rating", "feedback_text"]
-#     template_name = "student/feedback_form.html"
-
-#     def form_valid(self, form):
-#         course = get_object_or_404(Course, pk=self.kwargs["course_id"])
-#         student_profile = get_object_or_404(StudentProfile, user=self.request.user)
-#         form.instance.course = course
-#         form.instance.student = student_profile
-#         messages.success(self.request, "Feedback submitted successfully.")
-#         return super().form_valid(form)
-
-#     def get_success_url(self):
-#         return reverse_lazy("student:feedback_list")
-
-# class FeedbackListView(ListView):
-#     model = Feedback
-#     template_name = "student/feedback_list.html"
-#     context_object_name = "feedbacks"
-
-#     def get_queryset(self):
-#         student_profile = get_object_or_404(StudentProfile, user=self.request.user)
-#         return Feedback.objects.filter(student=student_profile)
 
 
 
