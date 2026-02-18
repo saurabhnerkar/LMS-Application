@@ -61,3 +61,17 @@ def teacher_dashboard(request):
         'courses': assigned_courses,
     }
     return render(request, 'teacher/teacher_dashboard.html', context)
+
+
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
+
+@cache_page(60 * 5)
+def course_list(request):
+    courses = cache.get_or_set(
+        key="all_courses",
+        default=lambda: list(Course.objects.all()),
+        timeout=300
+    )
+
+    return render(request, "courses.html", {"courses": courses})
